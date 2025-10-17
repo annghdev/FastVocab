@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Responses\" />
+    <Folder Include="DTOs\Requests\" />
+    <Folder Include="DTOs\ViewModels\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+
 </Project>
