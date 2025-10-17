@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FastVocab.Domain\FastVocab.Domain.csproj" />
-    <ProjectReference Include="..\FastVocab.Shared\FastVocab.Shared.csproj" />
   </ItemGroup>
 
 </Project>
