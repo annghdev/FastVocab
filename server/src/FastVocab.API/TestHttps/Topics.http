@@ -1,0 +1,111 @@
+### FastVocab API - Topics Management Test
+@baseUrl = https://localhost:5001/api
+@contentType = application/json
+
+### 1. Get all topics (Admin)
+GET {{baseUrl}}/topics
+Accept: {{contentType}}
+
+### 2. Get visible topics only (Student)
+GET {{baseUrl}}/topics/visible
+Accept: {{contentType}}
+
+### 3. Get topic by ID
+GET {{baseUrl}}/topics/1
+Accept: {{contentType}}
+
+### 4. Create new topic
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "Business English",
+  "vnText": "Tiếng Anh Thương Mại",
+  "imageUrl": "https://example.com/images/business-english.jpg"
+}
+
+### 5. Create another topic
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "Technology & IT",
+  "vnText": "Công Nghệ & CNTT",
+  "imageUrl": "https://example.com/images/technology.jpg"
+}
+
+### 6. Update topic (replace ID with actual ID from create response)
+PUT {{baseUrl}}/topics/1
+Content-Type: {{contentType}}
+
+{
+  "id": 1,
+  "name": "Business English Advanced",
+  "vnText": "Tiếng Anh Thương Mại Nâng Cao",
+  "imageUrl": "https://example.com/images/business-english-advanced.jpg",
+  "isHiding": false
+}
+
+### 7. Toggle topic visibility (Hide)
+PATCH {{baseUrl}}/topics/1/visibility
+Accept: {{contentType}}
+
+### 8. Toggle topic visibility again (Show)
+PATCH {{baseUrl}}/topics/1/visibility
+Accept: {{contentType}}
+
+### 9. Delete topic (Soft delete)
+DELETE {{baseUrl}}/topics/1
+
+### 10. Try to get deleted topic (Should return error)
+GET {{baseUrl}}/topics/1
+Accept: {{contentType}}
+
+### 11. Validation test - Create topic with empty name (Should fail)
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "",
+  "vnText": "Test",
+  "imageUrl": null
+}
+
+### 12. Validation test - Create topic with name too short (Should fail)
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "A",
+  "vnText": "B",
+  "imageUrl": null
+}
+
+### 13. Validation test - Create topic with invalid URL (Should fail)
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "Valid Topic Name",
+  "vnText": "Tên Hợp Lệ",
+  "imageUrl": "not-a-valid-url"
+}
+
+### 14. Create topic with valid data (Should succeed)
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "Daily Conversation",
+  "vnText": "Giao Tiếp Hằng Ngày"
+}
+
+### 15. Duplicate name test (Should fail)
+POST {{baseUrl}}/topics
+Content-Type: {{contentType}}
+
+{
+  "name": "Daily Conversation",
+  "vnText": "Giao Tiếp Hằng Ngày Duplicate"
+}
+

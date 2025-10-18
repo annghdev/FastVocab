@@ -19,6 +19,30 @@ public static class RegistrationExtensions
                 configuration.GetConnectionString("SqlServer"),
                 b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
+        // Register repositories and other services
+        AddRepositoriesAndServices(services);
+
+        return services;
+    }
+
+    /// <summary>
+    /// For testing - allows custom DbContext configuration
+    /// </summary>
+    public static IServiceCollection AddInfrastructureForTesting(
+        this IServiceCollection services,
+        Action<DbContextOptionsBuilder> configureDbContext)
+    {
+        // DbContext with custom configuration
+        services.AddDbContext<AppDbContext>(configureDbContext);
+
+        // Register repositories and other services
+        AddRepositoriesAndServices(services);
+
+        return services;
+    }
+
+    private static void AddRepositoriesAndServices(IServiceCollection services)
+    {
         // Repositories - Generic
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
@@ -32,7 +56,5 @@ public static class RegistrationExtensions
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        return services;
     }
 }
