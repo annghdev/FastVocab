@@ -1,3 +1,4 @@
+using FastVocab.API.Middlewares;
 using FastVocab.Application.Common.Extensions;
 using FastVocab.Infrastructure.Extensions;
 
@@ -21,6 +22,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+// Global exception handling middleware
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -28,3 +32,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Make the implicit Program class public for integration testing
+public partial class Program { }

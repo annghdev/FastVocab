@@ -1,0 +1,434 @@
+### FastVocab API - Words Management Test
+@baseUrl = https://localhost:5001/api
+@contentType = application/json
+
+### 1. Get all words
+GET {{baseUrl}}/words
+Accept: {{contentType}}
+
+### 2. Get word by ID
+GET {{baseUrl}}/words/1
+Accept: {{contentType}}
+
+### 3. Get words by topic ID
+GET {{baseUrl}}/words/topic/1
+Accept: {{contentType}}
+
+### 4. Get words by level - A1 (Beginner)
+GET {{baseUrl}}/words/level/A1
+Accept: {{contentType}}
+
+### 5. Get words by level - B1 (Intermediate)
+GET {{baseUrl}}/words/level/B1
+Accept: {{contentType}}
+
+### 6. Get words by level - B2 (Upper Intermediate)
+GET {{baseUrl}}/words/level/B2
+Accept: {{contentType}}
+
+### 7. Create new word with basic info (no topics)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "perseverance",
+  "meaning": "sự kiên trì, bền bỉ",
+  "definition": "continued effort to do or achieve something despite difficulties",
+  "type": "Noun",
+  "level": "B2",
+  "example1": "Success requires hard work and perseverance.",
+  "example2": "Her perseverance paid off when she finally graduated.",
+  "example3": "The project was completed through sheer perseverance.",
+  "imageUrl": "https://example.com/images/perseverance.jpg",
+  "audioUrl": "https://example.com/audio/perseverance.mp3"
+}
+
+### 8. Create word with topics
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "math",
+  "meaning": "toán học",
+  "definition": "a process or set of rules to be followed in calculations or problem-solving",
+  "type": "Noun",
+  "level": "C1",
+  "example1": "The algorithm processes data in real-time.",
+  "example2": "Machine learning algorithms can improve over time.",
+  "topicIds": [1, 2],
+  "imageUrl": "https://example.com/images/algorithm.jpg",
+  "audioUrl": "https://example.com/audio/algorithm.mp3"
+}
+
+### 9. Create word - Different word types
+### Verb
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "achieve",
+  "meaning": "đạt được, giành được",
+  "definition": "successfully reach a desired objective or result",
+  "type": "Verb",
+  "level": "B1",
+  "example1": "She achieved her goal of becoming a doctor.",
+  "example2": "We need to achieve better results this year."
+}
+
+### Adjective
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "excellent",
+  "meaning": "xuất sắc, tuyệt vời",
+  "type": "Adjective",
+  "level": "A2",
+  "example1": "That was an excellent presentation!",
+  "example2": "She has excellent communication skills."
+}
+
+### Adverb
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "quickly",
+  "meaning": "một cách nhanh chóng",
+  "type": "Adverb",
+  "level": "A1",
+  "example1": "Please respond quickly to the email.",
+  "example2": "Time passes quickly when you're having fun."
+}
+
+### 10. Create word - Simple word (minimal info)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "happy",
+  "meaning": "vui vẻ, hạnh phúc",
+  "type": "Adjective",
+  "level": "A1"
+}
+
+### 11. Update word (replace ID with actual ID from create response)
+PUT {{baseUrl}}/words/1
+Content-Type: {{contentType}}
+
+{
+  "id": 1,
+  "text": "perseverance",
+  "meaning": "sự kiên trì, kiên nhẫn, bền bỉ",
+  "definition": "continued effort to do or achieve something despite difficulties, failure, or opposition",
+  "type": "Noun",
+  "level": "B2",
+  "example1": "Success requires hard work and perseverance.",
+  "example2": "Her perseverance paid off when she finally graduated.",
+  "example3": "The project was completed through sheer perseverance and dedication.",
+  "imageUrl": "https://example.com/images/perseverance-updated.jpg",
+  "audioUrl": "https://example.com/audio/perseverance.mp3",
+  "topicIds": [1]
+}
+
+### 12. Update word - Change topics
+PUT {{baseUrl}}/words/2
+Content-Type: {{contentType}}
+
+{
+  "id": 2,
+  "text": "algorithm",
+  "meaning": "thuật toán, giải thuật",
+  "definition": "a process or set of rules to be followed in calculations or problem-solving operations",
+  "type": "Noun",
+  "level": "C1",
+  "example1": "The algorithm processes data in real-time.",
+  "example2": "Machine learning algorithms can improve over time.",
+  "topicIds": [2, 3],
+  "imageUrl": "https://example.com/images/algorithm.jpg",
+  "audioUrl": "https://example.com/audio/algorithm.mp3"
+}
+
+### 13. Add word to topic
+POST {{baseUrl}}/words/1/topics/2
+Accept: {{contentType}}
+
+### 14. Add word to another topic
+POST {{baseUrl}}/words/1/topics/3
+Accept: {{contentType}}
+
+### 15. Remove word from topic
+DELETE {{baseUrl}}/words/1/topics/3
+Accept: {{contentType}}
+
+### 16. Delete word (Soft delete)
+DELETE {{baseUrl}}/words/5
+
+### 17. Try to get deleted word (Should return error)
+GET {{baseUrl}}/words/5
+Accept: {{contentType}}
+
+### ========================================
+### VALIDATION TESTS
+### ========================================
+
+### 18. Validation test - Create word with empty text (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "",
+  "meaning": "Test meaning",
+  "type": "Noun",
+  "level": "A1"
+}
+
+### 19. Validation test - Create word with empty meaning (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "testword",
+  "meaning": "",
+  "type": "Noun",
+  "level": "A1"
+}
+
+### 20. Validation test - Invalid word type (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "testword",
+  "meaning": "nghĩa test",
+  "type": "InvalidType",
+  "level": "A1"
+}
+
+### 21. Validation test - Invalid level (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "testword",
+  "meaning": "nghĩa test",
+  "type": "Noun",
+  "level": "X1"
+}
+
+### 22. Validation test - Text too long (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "thiswordistoolongthiswordistoolongthiswordistoolongthiswordistoolongthiswordistoolongthiswordistoolongthiswordistoolong",
+  "meaning": "nghĩa test",
+  "type": "Noun",
+  "level": "A1"
+}
+
+### 23. Validation test - Meaning too long (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "testword",
+  "meaning": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "type": "Noun",
+  "level": "A1"
+}
+
+### 24. Validation test - Invalid image URL (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "testword",
+  "meaning": "nghĩa test",
+  "type": "Noun",
+  "level": "A1",
+  "imageUrl": "not-a-valid-url"
+}
+
+### 25. Validation test - Invalid audio URL (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "testword",
+  "meaning": "nghĩa test",
+  "type": "Noun",
+  "level": "A1",
+  "audioUrl": "ftp://invalid-scheme.com/audio.mp3"
+}
+
+### 26. Duplicate word text test (Should fail)
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "perseverance",
+  "meaning": "sự kiên trì (duplicate)",
+  "type": "Noun",
+  "level": "B2"
+}
+
+### ========================================
+### VALID WORD TYPES TEST
+### ========================================
+
+### 27. Create word - Pronoun
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "everyone",
+  "meaning": "mọi người",
+  "type": "Pronoun",
+  "level": "A2",
+  "example1": "Everyone is invited to the party."
+}
+
+### 28. Create word - Preposition
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "between",
+  "meaning": "giữa",
+  "type": "Preposition",
+  "level": "A2",
+  "example1": "The book is between the two magazines."
+}
+
+### 29. Create word - Conjunction
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "although",
+  "meaning": "mặc dù",
+  "type": "Conjunction",
+  "level": "B1",
+  "example1": "Although it was raining, we went out."
+}
+
+### 30. Create word - Article
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "the",
+  "meaning": "các, những (mạo từ xác định)",
+  "type": "Article",
+  "level": "A1",
+  "example1": "The cat is sleeping."
+}
+
+### ========================================
+### VALID LEVELS TEST
+### ========================================
+
+### 31. Create words at all levels - A1
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "hello",
+  "meaning": "xin chào",
+  "type": "Noun",
+  "level": "A1"
+}
+
+### 32. Level A2
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "understand",
+  "meaning": "hiểu",
+  "type": "Verb",
+  "level": "A2"
+}
+
+### 33. Level B1
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "challenge",
+  "meaning": "thách thức",
+  "type": "Noun",
+  "level": "B1"
+}
+
+### 34. Level B2
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "implement",
+  "meaning": "thực hiện, triển khai",
+  "type": "Verb",
+  "level": "B2"
+}
+
+### 35. Level C1
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "sophisticated",
+  "meaning": "tinh vi, phức tạp",
+  "type": "Adjective",
+  "level": "C1"
+}
+
+### 36. Level C2
+POST {{baseUrl}}/words
+Content-Type: {{contentType}}
+
+{
+  "text": "ubiquitous",
+  "meaning": "có mặt khắp nơi",
+  "type": "Adjective",
+  "level": "C2"
+}
+
+### ========================================
+### ERROR HANDLING TESTS
+### ========================================
+
+### 37. Get word with invalid ID (Should return 404)
+GET {{baseUrl}}/words/99999
+Accept: {{contentType}}
+
+### 38. Get words by non-existent topic (Should return 404)
+GET {{baseUrl}}/words/topic/99999
+Accept: {{contentType}}
+
+### 39. Update word with mismatched ID (Should return 400)
+PUT {{baseUrl}}/words/1
+Content-Type: {{contentType}}
+
+{
+  "id": 999,
+  "text": "test",
+  "meaning": "test",
+  "type": "Noun",
+  "level": "A1"
+}
+
+### 40. Add word to non-existent topic (Should fail)
+POST {{baseUrl}}/words/1/topics/99999
+Accept: {{contentType}}
+
+### 41. Remove word from topic it's not in (Should fail)
+DELETE {{baseUrl}}/words/1/topics/99999
+Accept: {{contentType}}
+
+### 42. Add already associated word to topic (Should fail)
+POST {{baseUrl}}/words/1/topics/1
+Accept: {{contentType}}
+
+
