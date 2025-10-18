@@ -1,13 +1,13 @@
 ﻿using FastVocab.Domain.Entities.Abstractions;
 
-namespace FastVocab.Domain.Entities;
+namespace FastVocab.Domain.Entities.CoreEntities;
 
-public class AttemptWord : EntityBase<int>
+public class TakedWord : EntityBase<int>
 {
     public Guid UserId { get; set; }
-    public AppUser? User { get; set; }
+    public virtual AppUser? User { get; set; }
     public int WordId { get; set; }
-    public Word? Word { get; set; }
+    public virtual Word? Word { get; set; }
     public int RepetitionCount { get; set; }
 
     // Độ dễ của từ (Easiness Factor - mặc định 2.5)

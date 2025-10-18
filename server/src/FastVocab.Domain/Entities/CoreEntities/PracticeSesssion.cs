@@ -1,13 +1,13 @@
 ﻿using FastVocab.Domain.Entities.Abstractions;
 
-namespace FastVocab.Domain.Entities;
+namespace FastVocab.Domain.Entities.CoreEntities;
 
-public class AttemptList : AuditableEntityBase<int>
+public class PracticeSesssion : AuditableEntityBase<int>
 {
     public Guid UserId { get; set; }
-    public AppUser? User { get; set; }
+    public virtual AppUser? User { get; set; }
     public int ListId { get; set; }
-    public WordList? List { get; set; }
+    public virtual WordList? List { get; set; }
 
     public int RepetitionCount { get; set; }
 
