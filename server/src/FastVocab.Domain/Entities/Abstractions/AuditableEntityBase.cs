@@ -1,7 +1,6 @@
-﻿
-namespace FastVocab.Domain.Entities.Abstractions;
+﻿namespace FastVocab.Domain.Entities.Abstractions;
 
-public class AuditableEntityBase<Tkey> : EntityBase<Task>, IAuditable, ISoftDeletable
+public abstract class AuditableEntityBase<Tkey> : EntityBase<Tkey>, IAuditable, ISoftDeletable
 {
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }

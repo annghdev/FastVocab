@@ -1,0 +1,38 @@
+﻿using FastVocab.Domain.Repositories;
+using FastVocab.Infrastructure.Data.EFCore;
+using FastVocab.Infrastructure.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace FastVocab.Infrastructure.Extensions;
+
+public static class RegistrationExtensions
+{
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // DbContext
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("SqlServer"),
+                b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+
+        // Repositories - Generic
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        // Repositories - Specific
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITopicRepository, TopicRepository>();
+        services.AddScoped<IWordRepository, WordRepository>();
+        services.AddScoped<ICollectionRepository, CollectionRepository>();
+        services.AddScoped<IPracticeSessionRepository, PracticeSessionRepository>();
+        services.AddScoped<ITakedWordRepository, TakedWordRepository>();
+
+        // Unit of Work
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        return services;
+    }
+}

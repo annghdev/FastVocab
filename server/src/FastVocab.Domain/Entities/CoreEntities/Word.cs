@@ -1,12 +1,14 @@
 ﻿using FastVocab.Domain.Constants;
 using FastVocab.Domain.Entities.Abstractions;
+using FastVocab.Domain.Entities.JunctionEntities;
 
-namespace FastVocab.Domain.Entities;
+namespace FastVocab.Domain.Entities.CoreEntities;
 
 public class Word : AuditableEntityBase<int>
 {
     public string Text { get; set; } = string.Empty;
     public string Meaning { get; set; } = string.Empty;
+    public string? Definition { get; set; }
     public string Type { get; set; } = WordTypes.Noun;
     public string Level { get; set; } = WordLevels.A1;
     public string? Example1 { get; set; }
@@ -15,5 +17,5 @@ public class Word : AuditableEntityBase<int>
     public string? ImageUrl { get; set; }
     public string? AudioUrl { get; set; }
 
-    public ICollection<WordTopic>? Topics { get; set; }
+    public virtual ICollection<WordTopic>? Topics { get; set; }
 }
