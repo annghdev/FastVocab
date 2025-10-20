@@ -27,6 +27,9 @@
     <Folder Include="Features\PracticeSessions\" />
     <Folder Include="Features\Collections\WordLists\" />
     <Folder Include="Features\Topics\" />
+    <Folder Include="Features\Users\Commands\" />
+    <Folder Include="Features\Users\Queries\" />
+    <Folder Include="Features\Users\Validators\" />
     <Folder Include="Features\Words\" />
   </ItemGroup>
 
