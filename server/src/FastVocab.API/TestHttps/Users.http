@@ -1,0 +1,79 @@
+### FastVocab API - Users Management Test
+@baseUrl = https://localhost:5001/api
+@contentType = application/json
+@sessionId = SESS_123456789
+@accountId = 7B73B4F0-368B-4618-ADF7-6C4D3C635CCD
+
+
+
+### 1. Get all users
+GET {{baseUrl}}/users
+Accept: {{contentType}}
+
+### 2. Create a new user with SessionId and AccountId
+# @name user1
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "fullName": "John Doe",
+  "sessionId": "{{sessionId}}",
+  "accountId": "{{accountId}}"
+}
+
+### 3. Get the created user by ID
+@userId1 = {{user1.response.body.$.id}}
+GET {{baseUrl}}/users/{{userId1}}
+Accept: {{contentType}}
+
+### 3.1 Get the created user by Session ID
+GET {{baseUrl}}/users/session/{{sessionId}}
+Accept: {{contentType}}
+
+
+### 4. Update the user's full name and SessionId
+PUT {{baseUrl}}/users/{{userId1}}
+Content-Type: {{contentType}}
+
+{
+  "id": "{{userId1}}",
+  "fullName": "John Doe Updated",
+  "sessionId": "SESS_UPDATED_987654321"
+}
+
+### 5. Get the user by ID again to see the update
+GET {{baseUrl}}/users/{{userId1}}
+Accept: {{contentType}}
+
+### 6. Validation test - Create user with FullName too long (Should fail)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "fullName": "This is a very long full name that is designed to exceed the maximum length validation of one hundred characters to ensure that the validation logic is working correctly."
+}
+
+### 7. Validation test - Create user with existing AccountId (Should fail)
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "fullName": "Jane Doe",
+  "accountId": "{{accountId}}"
+}
+
+
+### 8. Delete the user
+DELETE {{baseUrl}}/users/{{userId1}}
+
+### 9. Try to get the deleted user (Should return 404 Not Found)
+GET {{baseUrl}}/users/{{userId1}}
+Accept: {{contentType}}
+
+### 10. Try to get the deleted user by session id (Should return 404 Not Found)
+GET {{baseUrl}}/users/session/{{sessionId}}
+Accept: {{contentType}}
+
+
+### 11. Try to delete the user again (Should return 404 Not Found)
+DELETE {{baseUrl}}/users/{{userId1}}
