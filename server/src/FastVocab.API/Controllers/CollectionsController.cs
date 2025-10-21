@@ -14,6 +14,7 @@ using FastVocab.Application.Features.Collections.Commands.UpdateWordList;
 using FastVocab.Application.Features.Collections.Commands.AddWordToList;
 using FastVocab.Application.Features.Collections.Commands.RemoveWordFromList;
 using FastVocab.Application.Features.Collections.Commands.DeleteWordList;
+using FastVocab.Application.Features.Collections.Queries.WordLists.GetWordListById;
 
 namespace FastVocab.API.Controllers;
 
@@ -28,6 +29,8 @@ public class CollectionsController : ControllerBase
         _mediator = mediator;
     }
 
+
+    #region collection info base
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -138,6 +141,22 @@ public class CollectionsController : ControllerBase
 
         return NotFound(new { message = result.Errors?.FirstOrDefault()?.Title, errors = result.Errors });
     }
+    #endregion
+
+    #region word lists
+
+    [HttpGet("{id}/lists/{listId}")]
+    public async Task<IActionResult> GetWordListWithDetails(int id, int listId)
+    {
+        var result = await _mediator.Send(new GetWordListByIdQuery(id, listId));
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+
+        return NotFound(result.Errors);
+    }
+
 
     [HttpPost("{id}/lists")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -235,6 +254,5 @@ public class CollectionsController : ControllerBase
         return NotFound(result.Errors);
     }
 
-    // Add more endpoints for delete wordlist, add/remove word, etc.
-    // Assuming similar patterns
+    #endregion
 }
