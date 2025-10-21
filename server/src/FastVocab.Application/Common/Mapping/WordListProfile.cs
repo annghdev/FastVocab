@@ -10,7 +10,6 @@ public class WordListProfile : Profile
     {
         // Entity to DTO
         CreateMap<WordList, WordListDto>()
-            .ForMember(dest => dest.CollectionName, opt => opt.MapFrom(src => src.Collection != null ? src.Collection.Name : string.Empty))
             .ForMember(dest => dest.WordCount, opt => opt.MapFrom(src => src.Words != null ? src.Words.Count : 0));
 
         // Request to Entity

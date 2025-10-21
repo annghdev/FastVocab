@@ -10,5 +10,5 @@ public class WordList : AuditableEntityBase<int>
     public int CollectionId { get; set; }
     public virtual Collection? Collection { get; set; }
 
-    public virtual ICollection<WordListDetail>? Words { get; set; }
+    public virtual ICollection<WordListDetail> Words { get; set; } = [];
 }

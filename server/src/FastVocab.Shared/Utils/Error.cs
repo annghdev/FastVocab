@@ -5,7 +5,7 @@ public sealed record Error(string Title, int ErrorCode, string? Details = null)
     public static Error NotFound = new("Resource not found", 404);
     public static Error Deleted = new("Resource has already been deleted", 400);
     public static Error Conflict = new("Operation conflicts", 400);
-    public static Error NameExists = new("This name already exists", 400);
+    public static Error Duplicate = new("Duplicate", 400);
     public static Error InvalidInput = new("Invalid input", 400);
     public static Error AccessDenied = new("Access denied", 403);
     

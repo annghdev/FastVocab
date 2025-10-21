@@ -12,5 +12,5 @@ public record UpdateCollectionRequest
     public string? DifficultyLevel { get; init; }
     public string? ImageUrl { get; init; }
     public bool IsHiding { get; init; }
-}
+};
 

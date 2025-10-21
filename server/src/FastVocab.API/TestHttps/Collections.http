@@ -1,0 +1,76 @@
+### FastVocab API - Collections Management Test
+@baseUrl = https://localhost:5001/api
+@contentType = application/json
+
+### 1. Get all collections
+GET {{baseUrl}}/collections
+Accept: {{contentType}}
+
+### 2. Get collection by ID (replace with actual ID)
+GET {{baseUrl}}/collections/1
+Accept: {{contentType}}
+
+### 3. Get collection with lists
+GET {{baseUrl}}/collections/1/lists
+Accept: {{contentType}}
+
+### 4. Create new collection
+POST {{baseUrl}}/collections
+Content-Type: {{contentType}}
+
+{
+  "name": "TOEIC Vocabulary",
+  "description": "Essential words for TOEIC exam",
+  "targetAudience": "Students preparing for TOEIC",
+  "difficultyLevel": "B1",
+  "imageUrl": "https://example.com/toeic.jpg"
+}
+
+### 5. Update collection (replace ID with actual)
+PUT {{baseUrl}}/collections/1
+Content-Type: {{contentType}}
+
+{
+  "id": 1,
+  "name": "Updated TOEIC Vocabulary",
+  "description": "Updated description",
+  "targetAudience": "TOEIC candidates",
+  "difficultyLevel": "B2",
+  "imageUrl": "https://example.com/updated.jpg",
+  "isHiding": false
+}
+
+### 6. Toggle collection visibility
+PATCH {{baseUrl}}/collections/1/visibility
+Accept: {{contentType}}
+
+### 7. Delete collection
+DELETE {{baseUrl}}/collections/1
+
+### 8. Create word list in collection (replace collection ID)
+POST {{baseUrl}}/collections/1/lists
+Content-Type: {{contentType}}
+
+{
+  "collectionId": 1,
+  "name": "Lesson 1: Business Terms",
+  "imageUrl": "https://example.com/lesson1.jpg"
+}
+
+### 9. Validation test - Create collection with empty name
+POST {{baseUrl}}/collections
+Content-Type: {{contentType}}
+
+{
+  "name": "",
+  "description": "Test"
+}
+
+### 10. Duplicate name test
+POST {{baseUrl}}/collections
+Content-Type: {{contentType}}
+
+{
+  "name": "TOEIC Vocabulary",
+  "description": "Duplicate"
+}

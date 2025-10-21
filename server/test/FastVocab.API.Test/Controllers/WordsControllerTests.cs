@@ -298,7 +298,7 @@ public class WordsControllerTests
             Level = "A1"
         };
 
-        var result = Result<WordDto>.Failure(Error.NameExists);
+        var result = Result<WordDto>.Failure(Error.Duplicate);
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<CreateWordCommand>(), It.IsAny<CancellationToken>()))

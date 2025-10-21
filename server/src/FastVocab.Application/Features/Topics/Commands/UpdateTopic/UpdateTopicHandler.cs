@@ -40,7 +40,7 @@ public class UpdateTopicHandler : IRequestHandler<UpdateTopicCommand, Result<Top
             t.Name == request.Request.Name && t.Id != request.Request.Id);
         if (existingTopic != null)
         {
-            return Result<TopicDto>.Failure(Error.NameExists);
+            return Result<TopicDto>.Failure(Error.Duplicate);
         }
 
         // Update properties

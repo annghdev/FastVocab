@@ -44,7 +44,7 @@ public class UpdateWordHandler : IRequestHandler<UpdateWordCommand, Result<WordD
             w.Text == request.Request.Text && w.Id != request.Request.Id);
         if (existingWord != null)
         {
-            return Result<WordDto>.Failure(Error.NameExists);
+            return Result<WordDto>.Failure(Error.Duplicate);
         }
 
         // Update properties
