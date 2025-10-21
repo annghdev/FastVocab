@@ -11,9 +11,8 @@ public record WordListDto
     public string Name { get; init; } = string.Empty;
     public string? ImageUrl { get; init; }
     public int CollectionId { get; init; }
-    public string CollectionName { get; init; } = string.Empty;
     public int WordCount { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
-    public IEnumerable<WordDto>? Words { get; init; }
-}
+    public IEnumerable<WordDto> Words { get; set; } = [];
+};
 

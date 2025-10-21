@@ -10,5 +10,5 @@ public record CreateCollectionRequest
     public string? TargetAudience { get; init; }
     public string? DifficultyLevel { get; init; }
     public string? ImageUrl { get; init; }
-}
+};
 

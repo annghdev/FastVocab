@@ -23,4 +23,5 @@ public interface ICollectionRepository : IRepository<Collection>
     /// Get collection with full details (word lists and their words)
     /// </summary>
     Task<Collection?> GetWithFullDetailsAsync(int id, CancellationToken cancellationToken = default);
+    Task<WordList?> GetWordListAsync(int id);
 }

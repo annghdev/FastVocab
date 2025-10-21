@@ -9,8 +9,7 @@ public class CollectionProfile : Profile
     public CollectionProfile()
     {
         // Entity to DTO
-        CreateMap<Collection, CollectionDto>()
-            .ForMember(dest => dest.WordListCount, opt => opt.MapFrom(src => src.WordLists != null ? src.WordLists.Count : 0));
+        CreateMap<Collection, CollectionDto>();
 
         // Request to Entity
         CreateMap<CreateCollectionRequest, Collection>()

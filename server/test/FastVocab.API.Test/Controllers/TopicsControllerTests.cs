@@ -243,7 +243,7 @@ public class TopicsControllerTests
             VnText = "Chủ đề đã tồn tại"
         };
 
-        var result = Result<TopicDto>.Failure(Error.NameExists);
+        var result = Result<TopicDto>.Failure(Error.Duplicate);
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<CreateTopicCommand>(), It.IsAny<CancellationToken>()))

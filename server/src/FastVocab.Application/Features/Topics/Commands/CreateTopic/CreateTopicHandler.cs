@@ -27,7 +27,7 @@ public class CreateTopicHandler : IRequestHandler<CreateTopicCommand, Result<Top
         var existingTopic = await _unitOfWork.Topics.FindAsync(t => t.Name == request.Request.Name);
         if (existingTopic != null)
         {
-            return Result<TopicDto>.Failure(Error.NameExists);
+            return Result<TopicDto>.Failure(Error.Duplicate);
         }
 
         // Map request to entity

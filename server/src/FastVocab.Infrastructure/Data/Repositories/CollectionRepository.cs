@@ -42,5 +42,13 @@ public class CollectionRepository : Repository<Collection>, ICollectionRepositor
                     .ThenInclude(wld => wld.Word)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
+
+    public async Task<WordList?> GetWordListAsync(int id)
+    {
+        return await _context.WordLists
+            .Include(l => l.Words)
+                .ThenInclude(dt=>dt.Word)
+            .FirstOrDefaultAsync(l => l.Id == id);
+    }
 }
 

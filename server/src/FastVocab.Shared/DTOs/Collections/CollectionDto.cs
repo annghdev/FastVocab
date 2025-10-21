@@ -14,8 +14,7 @@ public record CollectionDto
     public string? DifficultyLevel { get; init; }
     public string? ImageUrl { get; init; }
     public bool IsHiding { get; init; }
-    public int WordListCount { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
-    public IEnumerable<WordListDto>? WordList { get; set; }
+    public IEnumerable<WordListDto> WordLists { get; init; } = [];
 }
 

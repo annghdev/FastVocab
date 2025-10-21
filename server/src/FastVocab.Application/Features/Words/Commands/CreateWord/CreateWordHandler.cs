@@ -28,7 +28,7 @@ public class CreateWordHandler : IRequestHandler<CreateWordCommand, Result<WordD
         var existingWord = await _unitOfWork.Words.FindAsync(w => w.Text == request.Request.Text);
         if (existingWord != null)
         {
-            return Result<WordDto>.Failure(Error.NameExists);
+            return Result<WordDto>.Failure(Error.Duplicate);
         }
 
         // Map request to entity
