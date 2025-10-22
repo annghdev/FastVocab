@@ -21,7 +21,7 @@ namespace FastVocab.API.Controllers
         {
             var request = new SendEmailRequest();
             request.ToEmail = "annghdev@gmail.com";
-            request.Template = "Welcome.cshtml";
+            request.Template = "Welcome";
             request.Model = new { Name = "An", ConfirmUrl = "chuacoconfirmurl" };
             request.Subject = "Test Send Email";
             await _service.SendEmailAsync(request);

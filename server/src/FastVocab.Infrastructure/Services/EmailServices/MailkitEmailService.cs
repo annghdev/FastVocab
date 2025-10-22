@@ -20,9 +20,9 @@ public class MailkitEmailService : IEmailService
     public async Task SendEmailAsync(SendEmailRequest request)
     {
         // Render template HTML bằng Razor Templating
-        string body = await RazorTemplateEngine.RenderAsync($"/EmailTemplates/{request.Template}", request.Model);
+        string body = await RazorTemplateEngine.RenderAsync($"/EmailTemplates/{request.Template}.cshtml", request.Model);
 
-        // 2️ Tạo message
+        // Tạo message
         var message = new MimeMessage();
         message.From.Add(MailboxAddress.Parse(_settings.From));
         message.To.Add(MailboxAddress.Parse(request.ToEmail));
