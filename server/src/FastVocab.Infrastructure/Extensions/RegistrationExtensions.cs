@@ -1,6 +1,9 @@
-﻿using FastVocab.Domain.Repositories;
+﻿using FastVocab.Application.Common.Interfaces;
+using FastVocab.Domain.Repositories;
 using FastVocab.Infrastructure.Data.EFCore;
 using FastVocab.Infrastructure.Data.Repositories;
+using FastVocab.Infrastructure.Extensions.Options;
+using FastVocab.Infrastructure.Services.FileServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +16,9 @@ public static class RegistrationExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Options
+        services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.Position));
+
         // DbContext
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
@@ -56,5 +62,9 @@ public static class RegistrationExtensions
 
         // Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Application Services
+        services.AddScoped<IFileStorageService, CloudinaryService>();
+        
     }
 }

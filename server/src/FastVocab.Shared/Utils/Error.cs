@@ -8,6 +8,7 @@ public sealed record Error(string Title, int ErrorCode, string? Details = null)
     public static Error Duplicate = new("Duplicate", 400);
     public static Error InvalidInput = new("Invalid input", 400);
     public static Error AccessDenied = new("Access denied", 403);
+    public static Error ExternalServiceError = new("ExternalError", 503);
     
     // Validation Errors
     public static Error ValidationFailed = new("Validation failed", 400);

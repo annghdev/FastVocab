@@ -1,35 +1,34 @@
 using AutoMapper;
 using FastVocab.Domain.Entities.CoreEntities;
-using FastVocab.Shared.DTOs.Collections;
+using FastVocab.Shared.DTOs.Topics;
 
-namespace FastVocab.Application.Common.Mapping;
+namespace FastVocab.Application.Common.Mappings;
 
-public class CollectionProfile : Profile
+public class TopicProfile : Profile
 {
-    public CollectionProfile()
+    public TopicProfile()
     {
         // Entity to DTO
-        CreateMap<Collection, CollectionDto>();
+        CreateMap<Topic, TopicDto>();
 
         // Request to Entity
-        CreateMap<CreateCollectionRequest, Collection>()
+        CreateMap<CreateTopicRequest, Topic>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.IsHiding, opt => opt.MapFrom(src => false))
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-            .ForMember(dest => dest.WordLists, opt => opt.Ignore())
+            .ForMember(dest => dest.Words, opt => opt.Ignore())
             .ForMember(dest => dest.DomainEvents, opt => opt.Ignore());
 
-        CreateMap<UpdateCollectionRequest, Collection>()
+        CreateMap<UpdateTopicRequest, Topic>()
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
             .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
-            .ForMember(dest => dest.WordLists, opt => opt.Ignore())
+            .ForMember(dest => dest.Words, opt => opt.Ignore())
             .ForMember(dest => dest.DomainEvents, opt => opt.Ignore());
     }
 }

@@ -1,4 +1,5 @@
-﻿using FastVocab.Domain.Entities.CoreEntities;
+﻿using FastVocab.Application.Common.Models;
+using FastVocab.Domain.Entities.CoreEntities;
 using FastVocab.Domain.Entities.JunctionEntities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -19,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<WordTopic> WordTopics { get; set; }
     public DbSet<PracticeSesssion> PracticeSessions { get; set; }
     public DbSet<TakedWord> TakedWords { get; set; }
+    public DbSet<FileMetadata> FileMetadata { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
