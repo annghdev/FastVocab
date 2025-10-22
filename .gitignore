@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 .docs/
 .cursor/
+
+appsettings.Development.json

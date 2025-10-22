@@ -3,8 +3,11 @@ using FastVocab.Domain.Repositories;
 using FastVocab.Infrastructure.Data.EFCore;
 using FastVocab.Infrastructure.Data.Repositories;
 using FastVocab.Infrastructure.Extensions.Options;
+using FastVocab.Infrastructure.Services.CacheServices;
+using FastVocab.Infrastructure.Services.EmailServices;
 using FastVocab.Infrastructure.Services.FileServices;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +21,10 @@ public static class RegistrationExtensions
     {
         // Options
         services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.Position));
+        services.Configure<EmailSettings>(configuration.GetSection(EmailSettings.Position));
+
+        // Memory Cache
+        services.AddMemoryCache();
 
         // DbContext
         services.AddDbContext<AppDbContext>(options =>
@@ -38,6 +45,9 @@ public static class RegistrationExtensions
         this IServiceCollection services,
         Action<DbContextOptionsBuilder> configureDbContext)
     {
+        // Memory Cache
+        services.AddMemoryCache();
+
         // DbContext with custom configuration
         services.AddDbContext<AppDbContext>(configureDbContext);
 
@@ -65,6 +75,9 @@ public static class RegistrationExtensions
 
         // Application Services
         services.AddScoped<IFileStorageService, CloudinaryService>();
-        
+        services.AddScoped<IEmailService, MailkitEmailService>();
+        services.AddRazorTemplating();
+
+        services.AddScoped<ICacheService, MemoryCacheService>();
     }
 }

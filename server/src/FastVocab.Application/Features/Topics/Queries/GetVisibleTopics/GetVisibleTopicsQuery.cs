@@ -1,3 +1,4 @@
+using FastVocab.Application.Common.Interfaces;
 using FastVocab.Shared.DTOs.Topics;
 using FastVocab.Shared.Utils;
 using MediatR;
@@ -7,5 +8,9 @@ namespace FastVocab.Application.Features.Topics.Queries.GetVisibleTopics;
 /// <summary>
 /// Query to get only visible Topics (IsHiding = false) for students
 /// </summary>
-public record GetVisibleTopicsQuery : IRequest<Result<IEnumerable<TopicDto>>>;
+public record GetVisibleTopicsQuery : IRequest<Result<IEnumerable<TopicDto>>>, ICacheableRequest
+{
+    public string? CacheKey => "VisibleTopics";
+    public TimeSpan? ExpirationSliding => TimeSpan.FromMinutes(15);
+}
 
