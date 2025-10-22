@@ -3,7 +3,7 @@ using FastVocab.Domain.Entities.CoreEntities;
 using FastVocab.Domain.Entities.JunctionEntities;
 using FastVocab.Shared.DTOs.Words;
 
-namespace FastVocab.Application.Common.Mapping;
+namespace FastVocab.Application.Common.Mappings;
 
 public class WordProfile : Profile
 {

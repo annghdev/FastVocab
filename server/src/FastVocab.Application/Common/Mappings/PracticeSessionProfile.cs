@@ -2,15 +2,15 @@ using AutoMapper;
 using FastVocab.Domain.Entities.CoreEntities;
 using FastVocab.Shared.DTOs.Practice;
 
-namespace FastVocab.Application.Common.Mapping;
+namespace FastVocab.Application.Common.Mappings;
 
-public class TakedWordProfile : Profile
+public class PracticeSessionProfile : Profile
 {
-    public TakedWordProfile()
+    public PracticeSessionProfile()
     {
         // Entity to DTO
-        CreateMap<TakedWord, TakedWordDto>()
-            .ForMember(dest => dest.WordText, opt => opt.MapFrom(src => src.Word != null ? src.Word.Text : string.Empty))
+        CreateMap<PracticeSesssion, PracticeSessionDto>()
+            .ForMember(dest => dest.ListName, opt => opt.MapFrom(src => src.List != null ? src.List.Name : string.Empty))
             .ForMember(dest => dest.IsDueForReview, opt => opt.MapFrom(src => 
                 src.NextReview.HasValue && src.NextReview.Value <= DateTimeOffset.UtcNow));
     }
