@@ -6,10 +6,9 @@ namespace FastVocab.Application.Common.Interfaces;
 
 public interface IFileStorageService
 {
-    Task<Result<FileMetadata>> UploadAsync(IFormFile file, string resource, string resourceId);
+    Task<Result<FileMetadata>> UploadAsync(IFormFile file, string resource, string entityId);
     Task<Result> DeleteFileAsync(string url);
     Task DeleteFilesAsync(string resource, string entityId);
 
     Task<IEnumerable<FileMetadata>> GetFileMetadatasByResourceAsync(string resource);
 }
-
