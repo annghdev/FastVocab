@@ -1,6 +1,6 @@
 using FastVocab.API.Middlewares;
-using FastVocab.Application.Common.Extensions;
-using FastVocab.Infrastructure.Extensions;
+using FastVocab.Application;
+using FastVocab.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

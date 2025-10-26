@@ -27,18 +27,17 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var response = await next();
         // Only process cacheable requests
         if (request is not ICacheableRequest cacheableRequest)
         {
-            return response;
+            return await next();
         }
 
         // Generate cache key
         var cacheKey = cacheableRequest.CacheKey;
         if (string.IsNullOrEmpty(cacheKey))
         {
-            return response;
+            return await next();
         }
 
         _logger.LogDebug("Checking cache for key: {CacheKey}", cacheKey);
@@ -48,14 +47,14 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
         if (cachedResponse != null)
         {
-            _logger.LogInformation("Cache hit for key: {CacheKey}", cacheKey);
+            _logger.LogDebug("Cache hit for key: {CacheKey}", cacheKey);
             return cachedResponse;
         }
 
         _logger.LogDebug("Cache miss for key: {CacheKey}", cacheKey);
 
         // Execute the request handler
-
+        var response = await next();
 
         // Cache the response
         await _cacheService.SetAsync(

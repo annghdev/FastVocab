@@ -9,7 +9,7 @@ namespace FastVocab.Application.Features.Topics.Queries.GetAllTopics;
 /// </summary>
 public record GetAllTopicsQuery : IRequest<IEnumerable<TopicDto>>, ICacheableRequest
 {
-    public string? CacheKey => "AllTopics";
+    public string? CacheKey => "topics_all";
     public TimeSpan? ExpirationSliding => TimeSpan.FromMinutes(15);
 }
 

@@ -1,0 +1,5 @@
+﻿- Get By Id: "entity_{id}"
+- Get All: "entities_all"
+- Get Visible : "entities_visible"
+- Paging + Sorting: "entities:page_{value}&size_{value}|{prop1}_{asc}&{prop2}_{desc}|"
+- Filter + Paging + Sorting: "entities:page_{value}&size_{value}|{prop1}_{asc}&{prop2}_{desc}|{prop1}_{value}_{operater}&{prop2}_{value}_{operater}"

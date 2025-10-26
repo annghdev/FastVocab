@@ -10,7 +10,7 @@ namespace FastVocab.Application.Features.Topics.Queries.GetVisibleTopics;
 /// </summary>
 public record GetVisibleTopicsQuery : IRequest<Result<IEnumerable<TopicDto>>>, ICacheableRequest
 {
-    public string? CacheKey => "VisibleTopics";
+    public string? CacheKey => "topics_visible";
     public TimeSpan? ExpirationSliding => TimeSpan.FromMinutes(15);
 }
 

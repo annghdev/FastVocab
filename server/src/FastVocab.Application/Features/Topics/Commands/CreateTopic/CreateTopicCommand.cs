@@ -10,8 +10,8 @@ namespace FastVocab.Application.Features.Topics.Commands.CreateTopic;
 /// </summary>
 public record CreateTopicCommand(CreateTopicRequest Request) : IRequest<Result<TopicDto>>, ICacheInvalidatorRequest
 {
-    public IEnumerable<string> CacheKeysToInvalidate => ["AllTopics", "VisibleTopics"];
+    public IEnumerable<string> CacheKeysToInvalidate => ["topics_all", "topics_visible"];
 
-    public IEnumerable<string>? CacheKeysPattern => null;
+    public string? Prefix => "topics_query"!;
 }
 

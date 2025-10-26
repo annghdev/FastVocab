@@ -9,8 +9,8 @@ namespace FastVocab.Application.Features.Topics.Commands.DeleteTopic;
 /// </summary>
 public record DeleteTopicCommand(int TopicId) : IRequest<Result>, ICacheInvalidatorRequest
 {
-    public IEnumerable<string> CacheKeysToInvalidate => ["AllTopics", "VisibleTopics", $"Topic_{TopicId}"];
+    public IEnumerable<string> CacheKeysToInvalidate => ["topics_all", "topics_visible", $"topic_{TopicId}"];
 
-    public IEnumerable<string>? CacheKeysPattern => null;
+    public string? Prefix => "topics_query";
 }
 

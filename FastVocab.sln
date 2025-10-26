@@ -31,19 +31,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.BlazorWebApp", "c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Shared", "server\src\FastVocab.Shared\FastVocab.Shared.csproj", "{19277256-9718-4609-ACF2-210218F4FB31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Domain.Test", "server\test\FastVocab.Domain.Test\FastVocab.Domain.Test.csproj", "{56B46EC3-9D03-4A22-89C3-B15FA7BBF7B9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Application.Test", "server\test\FastVocab.Application.Test\FastVocab.Application.Test.csproj", "{107495C7-05E5-4BBF-BD71-AB44E38B4E6B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.API.Test", "server\test\FastVocab.API.Test\FastVocab.API.Test.csproj", "{910589D6-2644-4A2A-9B90-366234BE266E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Infrastructure.Test", "server\test\FastVocab.Infrastructure.Test\FastVocab.Infrastructure.Test.csproj", "{53292BEB-84D1-4E6F-99A3-21E736BEF52E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Test.Shared", "server\test\FastVocab.Test.Shared\FastVocab.Test.Shared.csproj", "{9D743417-D2EC-4207-96E4-C269AE9D4DC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Test.FunctionalTests", "server\test\FastVocab.Test.FunctionalTests\FastVocab.Test.FunctionalTests.csproj", "{52073E75-611D-497F-884F-4888219299CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastVocab.Test.IntegrationTests", "server\test\FastVocab.Test.IntegrationTests\FastVocab.Test.IntegrationTests.csproj", "{17A0CD45-DE08-4A2C-B353-76A847E50665}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,22 +77,18 @@ Global
 		{19277256-9718-4609-ACF2-210218F4FB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19277256-9718-4609-ACF2-210218F4FB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19277256-9718-4609-ACF2-210218F4FB31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56B46EC3-9D03-4A22-89C3-B15FA7BBF7B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56B46EC3-9D03-4A22-89C3-B15FA7BBF7B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56B46EC3-9D03-4A22-89C3-B15FA7BBF7B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56B46EC3-9D03-4A22-89C3-B15FA7BBF7B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{107495C7-05E5-4BBF-BD71-AB44E38B4E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{107495C7-05E5-4BBF-BD71-AB44E38B4E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{107495C7-05E5-4BBF-BD71-AB44E38B4E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{107495C7-05E5-4BBF-BD71-AB44E38B4E6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{910589D6-2644-4A2A-9B90-366234BE266E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{910589D6-2644-4A2A-9B90-366234BE266E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{910589D6-2644-4A2A-9B90-366234BE266E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{910589D6-2644-4A2A-9B90-366234BE266E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53292BEB-84D1-4E6F-99A3-21E736BEF52E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53292BEB-84D1-4E6F-99A3-21E736BEF52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53292BEB-84D1-4E6F-99A3-21E736BEF52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53292BEB-84D1-4E6F-99A3-21E736BEF52E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D743417-D2EC-4207-96E4-C269AE9D4DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D743417-D2EC-4207-96E4-C269AE9D4DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D743417-D2EC-4207-96E4-C269AE9D4DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D743417-D2EC-4207-96E4-C269AE9D4DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52073E75-611D-497F-884F-4888219299CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52073E75-611D-497F-884F-4888219299CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52073E75-611D-497F-884F-4888219299CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52073E75-611D-497F-884F-4888219299CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17A0CD45-DE08-4A2C-B353-76A847E50665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17A0CD45-DE08-4A2C-B353-76A847E50665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17A0CD45-DE08-4A2C-B353-76A847E50665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17A0CD45-DE08-4A2C-B353-76A847E50665}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,10 +106,9 @@ Global
 		{42395AB3-FE97-4041-996D-5E30C94C8E6C} = {94C7D738-0C10-45DB-A367-6C59AA0C19A6}
 		{9EBF074D-4F05-4E35-AAC1-C69467FE1660} = {7D33D8C0-CCFD-4D07-A0B9-C1E26078B7E2}
 		{19277256-9718-4609-ACF2-210218F4FB31} = {092D3DBE-F916-4B17-9D71-546E3E33C250}
-		{56B46EC3-9D03-4A22-89C3-B15FA7BBF7B9} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
-		{107495C7-05E5-4BBF-BD71-AB44E38B4E6B} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
-		{910589D6-2644-4A2A-9B90-366234BE266E} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
-		{53292BEB-84D1-4E6F-99A3-21E736BEF52E} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
+		{9D743417-D2EC-4207-96E4-C269AE9D4DC7} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
+		{52073E75-611D-497F-884F-4888219299CB} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
+		{17A0CD45-DE08-4A2C-B353-76A847E50665} = {A5A7AF05-1003-4B2C-B096-B2C4B6FE039D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E6B5F33B-26E0-4AED-9EAC-0BE82EC1FB5E}
