@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Collections\Commands\WordLists\**" />
+    <EmbeddedResource Remove="Features\Collections\Commands\WordLists\**" />
+    <None Remove="Features\Collections\Commands\WordLists\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
@@ -20,23 +26,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Extensions\Options\" />
     <Folder Include="Features\Collections\Commands\CreateCollection\" />
     <Folder Include="Features\Collections\Commands\DeleteCollection\" />
     <Folder Include="Features\Collections\Commands\UpdateCollection\" />
-    <Folder Include="Features\Collections\Commands\WordLists\AddWordsToList\" />
-    <Folder Include="Features\Collections\Commands\WordLists\UpdateListInfo\" />
-    <Folder Include="Features\Collections\Commands\WordLists\RemoveWordsFromList\" />
     <Folder Include="Features\Collections\Queries\GetAllCollections\" />
     <Folder Include="Features\Collections\Queries\GetCollectionById\" />
     <Folder Include="Features\TakedWords\" />
-    <Folder Include="Features\Users\" />
     <Folder Include="Features\PracticeSessions\" />
-    <Folder Include="Features\Topics\" />
-    <Folder Include="Features\Users\Commands\" />
     <Folder Include="Features\Users\Queries\" />
-    <Folder Include="Features\Users\Validators\" />
-    <Folder Include="Features\Words\" />
   </ItemGroup>
 
 </Project>

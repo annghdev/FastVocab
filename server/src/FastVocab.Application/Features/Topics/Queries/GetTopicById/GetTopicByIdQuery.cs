@@ -10,6 +10,6 @@ namespace FastVocab.Application.Features.Topics.Queries.GetTopicById;
 /// </summary>
 public record GetTopicByIdQuery(int TopicId) : IRequest<Result<TopicDto>>, ICacheableRequest
 {
-    public string? CacheKey => $"Topic_{TopicId}";
+    public string? CacheKey => $"topic_{TopicId}";
     public TimeSpan? ExpirationSliding => TimeSpan.FromMinutes(10);
 }

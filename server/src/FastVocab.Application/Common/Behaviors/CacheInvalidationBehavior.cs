@@ -56,6 +56,11 @@ public class CacheInvalidationBehavior<TRequest, TResponse> : IPipelineBehavior<
                 _logger.LogInformation("remove cached for key: {key}", key);
                 await _cacheService.RemoveAsync(key, cancellationToken);
             }
+
+            if (!string.IsNullOrEmpty(invalidator.Prefix))
+            {
+                await _cacheService.RemoveByPrefixAsync(invalidator.Prefix, cancellationToken);
+            }
         }
 
         return response;

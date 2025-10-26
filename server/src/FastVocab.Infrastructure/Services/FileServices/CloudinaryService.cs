@@ -3,7 +3,7 @@ using CloudinaryDotNet.Actions;
 using FastVocab.Application.Common.Interfaces;
 using FastVocab.Application.Common.Models;
 using FastVocab.Infrastructure.Data.EFCore;
-using FastVocab.Infrastructure.Extensions.Options;
+using FastVocab.Infrastructure.SettingOptions;
 using FastVocab.Shared.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

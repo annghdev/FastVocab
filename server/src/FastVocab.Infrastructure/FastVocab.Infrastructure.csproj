@@ -28,6 +28,5 @@
 
   <ItemGroup>
     <Folder Include="Data\Repositories\" />
-    <Folder Include="Services\CacheServices\" />
   </ItemGroup>
 </Project>

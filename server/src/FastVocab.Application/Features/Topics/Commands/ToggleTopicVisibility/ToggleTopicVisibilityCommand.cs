@@ -10,8 +10,8 @@ namespace FastVocab.Application.Features.Topics.Commands.ToggleTopicVisibility;
 /// </summary>
 public record ToggleTopicVisibilityCommand(int TopicId) : IRequest<Result<TopicDto>>, ICacheInvalidatorRequest
 {
-    public IEnumerable<string> CacheKeysToInvalidate => ["AllTopics", "VisibleTopics", $"Topic_{TopicId}"];
+    public IEnumerable<string> CacheKeysToInvalidate => ["topic_all", "topics_visible", $"topic_{TopicId}"];
 
-    public IEnumerable<string>? CacheKeysPattern => null;
+    public string? Prefix => "topics_query"!;
 }
 
