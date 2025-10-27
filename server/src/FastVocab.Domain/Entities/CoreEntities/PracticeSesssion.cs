@@ -17,9 +17,10 @@ public class PracticeSesssion : AuditableEntityBase<int>
     // Ngày ôn tiếp theo
     public DateTime? NextReview { get; set; }
 
-    public void SetNextTime()
+    public void Submit()
     {
-        LastReviewed = NextReview;
-        NextReview?.AddDays(SRS.FixedSpaced[RepetitionCount]);
+        LastReviewed = DateTime.UtcNow;
+        NextReview =  LastReviewed?.AddDays(SRS.FixedSpaced[RepetitionCount]);
+        RepetitionCount++;
     }
 }

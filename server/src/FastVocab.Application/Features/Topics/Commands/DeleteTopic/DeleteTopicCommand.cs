@@ -11,6 +11,6 @@ public record DeleteTopicCommand(int TopicId) : IRequest<Result>, ICacheInvalida
 {
     public IEnumerable<string> CacheKeysToInvalidate => ["topics_all", "topics_visible", $"topic_{TopicId}"];
 
-    public string? Prefix => "topics_query";
+    public string? Prefix => "topics:";
 }
 
