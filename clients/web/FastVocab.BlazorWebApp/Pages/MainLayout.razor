@@ -1,0 +1,67 @@
+﻿@inherits LayoutComponentBase
+
+<Layout>
+    <Header Class="header">
+        <div class="header-left">
+            @* <img class="logo" src="logo.png" /> *@
+            <Avatar Size="AvatarSize.Large" Src="logo.png" />
+            <h2 class="app-name">Admin Panel</h2>
+        </div>
+        <div class="header-right">
+            <Dropdown>
+                <ChildContent>
+                    <Button Type="@ButtonType.Link" Class="user-dropdown-btn">
+                        <Avatar Size="AvatarSize.Small" Icon="@IconType.Outline.User" />
+                        <span class="username">John Doe</span>
+                        <Icon Type="@IconType.Outline.Down" />
+                    </Button>
+                </ChildContent>
+                <Overlay>
+                    <Menu>
+                        <MenuItem Key="profile" RouterLink="/account">
+                            <Icon Type="@IconType.Outline.User" />
+                            <span>Quản lý tài khoản</span>
+                        </MenuItem>
+                        <MenuDivider />
+                        <MenuItem Key="logout" OnClick="() => { }">
+                            <Icon Type="@IconType.Outline.Logout" />
+                            <span>Đăng xuất</span>
+                        </MenuItem>
+                    </Menu>
+                </Overlay>
+            </Dropdown>
+        </div>
+    </Header>
+    <Layout>
+        <Sider Collapsible Theme="SiderTheme.Light" Width="250">
+            <Menu Theme="MenuTheme.Light" DefaultSelectedKeys=@(new[] { "1" }) Mode="MenuMode.Inline">
+                <MenuItem Key="1" RouterLink="/">
+                    <Icon Type="@IconType.Outline.BarChart" />
+                    <span>Dashboard</span>
+                </MenuItem>
+                <MenuItem Key="2" RouterLink="/words">
+                    <Icon Type="@IconType.Outline.ShoppingCart" />
+                    <span>Words</span>
+                </MenuItem>
+                <MenuItem Key="3" RouterLink="/collections">
+                    <Icon Type="@IconType.Outline.ShoppingCart" />
+                    <span>Collections</span>
+                </MenuItem>
+                <MenuItem Key="4" RouterLink="/practices">
+                    <Icon Type="@IconType.Outline.ShoppingCart" />
+                    <span>Practices</span>
+                </MenuItem>
+            </Menu>
+        </Sider>
+        <Layout>
+            <Content Class="site-layout-background" Style="padding: 16px; margin: 0; min-height: 100vh;">
+                @Body
+            </Content>
+        </Layout>
+    </Layout>
+</Layout>
+@* <div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div> *@

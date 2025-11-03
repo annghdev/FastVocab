@@ -1,10 +1,12 @@
-using FastVocab.BlazorWebApp.Components;
-
+using FastVocab.BlazorWebApp.Pages;
+using FastVocab.BlazorWebApp;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
 
