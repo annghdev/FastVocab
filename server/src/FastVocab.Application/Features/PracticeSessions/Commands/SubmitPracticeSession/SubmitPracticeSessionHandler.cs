@@ -25,6 +25,10 @@ public class SubmitPracticeSessionHandler : IRequestHandler<SubmitPracticeSessio
             return Result<PracticeSessionDto>.Failure(Error.NotFound);
         }
         practiceSession.Submit();
+
+        _unitOfWork.PracticeSessions.Update(practiceSession);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         var dto = _mapper.Map<PracticeSessionDto>(practiceSession);
 
         return Result<PracticeSessionDto>.Success(dto);
