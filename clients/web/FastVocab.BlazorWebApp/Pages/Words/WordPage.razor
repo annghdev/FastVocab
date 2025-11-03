@@ -1,0 +1,33 @@
+﻿@page "/words"
+@using FastVocab.Shared.DTOs.Words
+@inject WordService Words;
+
+@if (_isLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var word in _words)
+        {
+            <li>@word.Text: @word.Meaning</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<WordDto> _words = [];
+    bool _isLoading = false;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        await Task.Delay(100);
+        _words = await Words.GetAllAsync();
+        _isLoading = false;
+    }
+}
