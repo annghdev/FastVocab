@@ -32,7 +32,6 @@
     <Folder Include="Features\Collections\Queries\GetAllCollections\" />
     <Folder Include="Features\Collections\Queries\GetCollectionById\" />
     <Folder Include="Features\TakedWords\" />
-    <Folder Include="Features\PracticeSessions\" />
     <Folder Include="Features\Users\Queries\" />
   </ItemGroup>
 

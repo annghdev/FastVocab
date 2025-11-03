@@ -12,6 +12,6 @@ public record ToggleTopicVisibilityCommand(int TopicId) : IRequest<Result<TopicD
 {
     public IEnumerable<string> CacheKeysToInvalidate => ["topic_all", "topics_visible", $"topic_{TopicId}"];
 
-    public string? Prefix => "topics_query"!;
+    public string? Prefix => "topics:"!;
 }
 

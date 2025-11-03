@@ -12,5 +12,5 @@ public record UpdateTopicCommand(UpdateTopicRequest Request) : IRequest<Result<T
 {
     public IEnumerable<string> CacheKeysToInvalidate => ["topics_all", "topics_visible", $"topic_{Request.Id}"];
 
-    public string? Prefix => "topics_query";
+    public string? Prefix => "topics:";
 }

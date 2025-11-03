@@ -12,6 +12,6 @@ public record CreateTopicCommand(CreateTopicRequest Request) : IRequest<Result<T
 {
     public IEnumerable<string> CacheKeysToInvalidate => ["topics_all", "topics_visible"];
 
-    public string? Prefix => "topics_query"!;
+    public string? Prefix => "topics:"!;
 }
 
