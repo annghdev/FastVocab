@@ -2,12 +2,14 @@
 
 public sealed record Error(string Title, int ErrorCode, string? Details = null)
 {
+    public static Error None = new("None", 200);
     public static Error NotFound = new("Resource not found", 404);
     public static Error Deleted = new("Resource has already been deleted", 400);
     public static Error Conflict = new("Operation conflicts", 400);
     public static Error Duplicate = new("Duplicate", 400);
     public static Error InvalidInput = new("Invalid input", 400);
     public static Error AccessDenied = new("Access denied", 403);
+    public static Error Empty = new("Empty", 400);
     public static Error ExternalServiceError = new("ExternalError", 503);
     
     // Validation Errors

@@ -7,30 +7,7 @@
             <Avatar Size="AvatarSize.Large" Src="logo.png" />
             <h2 class="app-name">Admin Panel</h2>
         </div>
-        <div class="header-right">
-            <Dropdown>
-                <ChildContent>
-                    <Button Type="@ButtonType.Link" Class="user-dropdown-btn">
-                        <Avatar Size="AvatarSize.Small" Icon="@IconType.Outline.User" />
-                        <span class="username">John Doe</span>
-                        <Icon Type="@IconType.Outline.Down" />
-                    </Button>
-                </ChildContent>
-                <Overlay>
-                    <Menu>
-                        <MenuItem Key="profile" RouterLink="/account">
-                            <Icon Type="@IconType.Outline.User" />
-                            <span>Quản lý tài khoản</span>
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem Key="logout" OnClick="() => { }">
-                            <Icon Type="@IconType.Outline.Logout" />
-                            <span>Đăng xuất</span>
-                        </MenuItem>
-                    </Menu>
-                </Overlay>
-            </Dropdown>
-        </div>
+        
     </Header>
     <Layout>
         <Sider Collapsible Theme="SiderTheme.Light" Width="250">
@@ -40,15 +17,15 @@
                     <span>Dashboard</span>
                 </MenuItem>
                 <MenuItem Key="2" RouterLink="/words">
-                    <Icon Type="@IconType.Outline.ShoppingCart" />
+                    <Icon Type="@IconType.Outline.Appstore" />
                     <span>Words</span>
                 </MenuItem>
                 <MenuItem Key="3" RouterLink="/collections">
-                    <Icon Type="@IconType.Outline.ShoppingCart" />
+                    <Icon Type="@IconType.Outline.OrderedList" />
                     <span>Collections</span>
                 </MenuItem>
                 <MenuItem Key="4" RouterLink="/practices">
-                    <Icon Type="@IconType.Outline.ShoppingCart" />
+                    <Icon Type="@IconType.Outline.Bulb" />
                     <span>Practices</span>
                 </MenuItem>
             </Menu>
