@@ -28,11 +28,22 @@ public class CreatePracticeSessionHandler : IRequestHandler<CreatePracticeSessio
             return Result<PracticeSessionDto>.Failure(Error.Duplicate);
         }
 
+        var existentUser = await _unitOfWork.Users.FindAsync(p => p.Id == request.Request.UserId);
+        var existentWordList = await _unitOfWork.Collections.GetWordListAsync(request.Request.ListId);
+
+        if (existentUser == null || existentWordList == null)
+        {
+            return Result<PracticeSessionDto>.Failure(Error.NotFound);
+        }
+
         practiceSession = new PracticeSesssion
         {
             UserId = request.Request.UserId,
             ListId = request.Request.ListId,
         };
+
+        _unitOfWork.PracticeSessions.Add(practiceSession);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var dto = _mapper.Map<PracticeSessionDto>(practiceSession);
         return Result<PracticeSessionDto>.Success(dto);
