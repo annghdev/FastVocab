@@ -1,8 +1,80 @@
 ﻿@page "/practices"
+@using FastVocab.BlazorWebApp.Pages.CardMatchGames
+@using FastVocab.BlazorWebApp.Pages.Dictations
+@using FastVocab.BlazorWebApp.Pages.Quiz
+@inject WordListState WordListState
 
+@if (_loading)
+{
+    <Skeleton Active="true" ParagraphRows="10"></Skeleton>
+}
+else
+{
+    <div>
+        <Steps Current="(int)_step" Class="site-navigation-steps" Type="StepsType.Navigation" >
+            <Step Title="Chọn Nghĩa" Description="Trắc nghiệm" />
+            <Step Title="Chọn từ" Description="Trắc nghiệm" />
+            <Step Title="Điền từ" Description="Bấm Enter để check" />
+            <Step Title="Tìm cặp" Description="Chọn 2 thẻ khớp nhau" />
+            <Step Title="Hoàn thành" />
+        </Steps>
+    </div>
+    <br />
+    <br />
+    switch (_step)
+    {
+        case PracticeStep.QuizAskForMeaning:
+            <BasicQuiz AskForMeaning="true" OnCompleted="SetNextStep" />
+            break;
 
-<h3>PracticePage</h3>
+        case PracticeStep.QuizAskFromMeaning:
+            <BasicQuiz AskForMeaning="false" OnCompleted="SetNextStep" />
+            break;
+
+        case PracticeStep.Dictation:
+            <Dictation OnCompleted="SetNextStep" />
+            break;
+
+        case PracticeStep.CardMatch:
+            <CardMatch OnGameFinished="SetNextStep"/>
+            break;
+
+        case PracticeStep.Done:
+            <Result Status="ResultStatus.Success"
+                    Title="Successfully Complete the practice sesion"
+                    SubTitle="Sắp có: chọn cặp thẻ">
+                <Extra>
+                    <Button Type="ButtonType.Primary">Bộ khác</Button>
+                    <Button>Làm lại</Button>
+                </Extra>
+            </Result>
+            break;
+    }
+}
+
 
 @code {
+    public enum PracticeStep
+    {
+        QuizAskForMeaning = 0,
+        QuizAskFromMeaning = 1,
+        Dictation = 2,
+        CardMatch = 3,
+        Done = 4,
+    }
 
+    private bool _loading = true;
+    private PracticeStep _step = PracticeStep.QuizAskForMeaning;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(300);
+        _loading = false;
+    }
+
+    private void SetNextStep(PracticeStep step)
+    {
+        _step = step;
+        StateHasChanged();
+    }
 }

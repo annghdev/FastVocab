@@ -2,11 +2,6 @@
 
 <Layout>
     <Header Class="header">
-        <div class="header-left">
-            @* <img class="logo" src="logo.png" /> *@
-            <Avatar Size="AvatarSize.Large" Src="logo.png" />
-            <h2 class="app-name">Admin Panel</h2>
-        </div>
         
     </Header>
     <Layout>
@@ -18,20 +13,20 @@
                 </MenuItem>
                 <MenuItem Key="2" RouterLink="/words">
                     <Icon Type="@IconType.Outline.Appstore" />
-                    <span>Words</span>
+                    <span>Từ vựng</span>
                 </MenuItem>
-                <MenuItem Key="3" RouterLink="/collections">
-                    <Icon Type="@IconType.Outline.OrderedList" />
-                    <span>Collections</span>
+                <MenuItem Key="3" RouterLink="/speech">
+                    <Icon Type="@IconType.Outline.Sound" />
+                    <span>Speech Test</span>
                 </MenuItem>
                 <MenuItem Key="4" RouterLink="/practices">
                     <Icon Type="@IconType.Outline.Bulb" />
-                    <span>Practices</span>
+                    <span>Luyện tập</span>
                 </MenuItem>
             </Menu>
         </Sider>
         <Layout>
-            <Content Class="site-layout-background" Style="padding: 16px; margin: 0; min-height: 100vh;">
+            <Content Style="padding: 16px; margin: 0; min-height: 100vh;background:#F9F8F8">
                 @Body
             </Content>
         </Layout>

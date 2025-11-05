@@ -7,7 +7,7 @@ namespace FastVocab.Application.Features.Words.Commands.ImportFromExcel;
 
 public record ImportWordsFromExcelCommand(IFormFile File) :IRequest<ImportExcelResult<WordDto>> , ICacheInvalidatorRequest
 {
-    public IEnumerable<string> CacheKeysToInvalidate => ["words_all"];
+    public IEnumerable<string> CacheKeysToInvalidate => ["words_all", "topics_all"];
 
     public string? Prefix => "words:";
 }

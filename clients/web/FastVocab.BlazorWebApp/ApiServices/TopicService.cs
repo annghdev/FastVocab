@@ -16,7 +16,7 @@ namespace FastVocab.BlazorWebApp.ApiServices
         }
 
         #region READ
-        public async Task<List<TopicDto>> GetAllTopics()
+        public async Task<List<TopicDto>> GetAllAsync()
         {
             var res = await _httpClient.GetFromJsonAsync<List<TopicDto>>(_baseUrl);
             return res ?? [];

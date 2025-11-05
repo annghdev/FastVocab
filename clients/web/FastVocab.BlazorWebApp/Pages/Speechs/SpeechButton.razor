@@ -1,0 +1,36 @@
+﻿@using AntDesign
+@inject TextToSpeechHepler SpeechHelper
+
+<div style="display:flex; align-items:center; gap:8px;">
+    <Button Type="ButtonType.Primary" Icon="sound" OnClick="@(() => Speak("en-GB"))">UK</Button>
+    <Button Type="ButtonType.Primary" Icon="sound" OnClick="@(() => Speak("en-US"))">US</Button>
+    <Button Icon="setting" OnClick="() => settingVisible = true"></Button>
+</div>
+
+<Modal Title="Cài đặt phát âm" Visible="@settingVisible" OnCancel="() => settingVisible = false" OnOk="() => settingVisible = false">
+    <p>Chọn tốc độ phát âm:</p>
+    <Select DataSource="@availableRates"
+            @bind-Value=selectedRate
+            DefaultValue="@(1.0)"
+            Style="width:100%;">
+    </Select>
+</Modal>
+
+@code {
+    [Parameter] public string Text { get; set; } = string.Empty;
+
+    private bool settingVisible = false;
+    private double selectedRate = 1.0;
+
+    private readonly double[] availableRates = new double[] { 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+
+    private async Task Speak(string lang)
+    {
+        if (string.IsNullOrWhiteSpace(Text))
+        {
+            return;
+        }
+
+        await SpeechHelper.SpeakAsync(Text, lang, selectedRate);
+    }
+}

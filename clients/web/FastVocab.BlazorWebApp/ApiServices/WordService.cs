@@ -36,9 +36,9 @@ public class WordService
 
     #region WRITE
 
-    public async Task<WordDto?> CreateAsync(CreateWordRequest request)
+    public async Task<WordDto?> CreateAsync(CreateWordRequest word)
     {
-        var res = await _httpClient.PostAsJsonAsync(_baseUrl, request);
+        var res = await _httpClient.PostAsJsonAsync(_baseUrl, word);
         if (res.IsSuccessStatusCode)
         {
             var result = await res.Content.ReadFromJsonAsync<WordDto>();
@@ -49,9 +49,20 @@ public class WordService
         return null;
     }
 
-    public async Task<bool> UpdateAsync(UpdateWordRequest request)
+    public async Task<bool> UpdateAsync(WordDto word)
     {
-        var res = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{request.Id}", request);
+        var req = new CreateWordRequest
+        {
+            Text = word.Text,
+            Meaning = word.Meaning,
+            Type = word.Type,
+            Level = word.Level,
+            Definition = word.Definition,
+            Example1 = word.Example1,
+            Example2 = word.Example2,
+            Example3 = word.Example3,
+        };
+        var res = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{word.Id}", req);
         if (res.IsSuccessStatusCode)
         {
             return true;

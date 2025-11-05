@@ -1,0 +1,205 @@
+﻿@using FastVocab.Shared.DTOs.Words
+@using static FastVocab.BlazorWebApp.Pages.Practices.PracticePage
+@inject WordListState WordListState
+@inject TextToSpeechHepler SpeechHelper
+
+@if (_isLoading)
+{
+    <Spin Size="SpinSize.Large" />
+}
+else
+{
+    <div class="quiz-wrapper">
+        <Card class="quiz-card" bordered="true">
+            <Flex Justify="FlexJustify.SpaceBetween">
+                <h2>@_currentWord.Meaning</h2>
+                <FastVocab.BlazorWebApp.Pages.Speechs.SpeechButton Text="@_currentWord.Text" />
+            </Flex>
+
+            <div class="quiz-body">
+                <Input @bind-Value="_answer"
+                       OnPressEnter="CheckCorrect"
+                       Class="@InputClass"
+                       Placeholder="Nhập từ tiếng Anh..."
+                       style="font-size:1.4rem; height:50px; text-align:center;" />
+
+                <div class="quiz-buttons mt-4">
+                    <Button Type="ButtonType.Primary" OnClick="CheckCorrect">Kiểm tra</Button>
+                    <Button OnClick="ShowCorrectAnswer">Xem đáp án</Button>
+                </div>
+            </div>
+            <br />
+            <br />
+            <Progress Percent="ProgressPercent"
+                      Status="@(IsComplete ? ProgressStatus.Success : ProgressStatus.Active)"
+                      ShowInfo="false" />
+        </Card>
+    </div>
+}
+
+
+<style>
+    /* Toàn bộ bố cục */
+    .quiz-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 85vh;
+    }
+
+    .quiz-card {
+        width: 600px;
+        padding: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 2px;
+        background-color: white;
+    }
+
+    /* Tiêu đề + Progress */
+    .quiz-header {
+        text-align: center;
+        margin-bottom: 24px;
+        display:flex;
+    }
+
+        .quiz-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            color: #1f1f1f;
+        }
+
+    /* Nội dung chính */
+    .quiz-body {
+        text-align: center;
+    }
+
+    /* Nút */
+    .quiz-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    /* Hiệu ứng khi đúng / sai */
+    .quiz-input-correct {
+        border: 2px solid #52c41a !important;
+        color: #52c41a !important;
+        box-shadow: 0 0 8px rgba(82, 196, 26, 0.5);
+    }
+
+    .quiz-input-wrong {
+        border: 2px solid #ff4d4f !important;
+        color: #ff4d4f !important;
+        box-shadow: 0 0 8px rgba(255, 77, 79, 0.5);
+    }
+
+    /* Hiệu ứng rung khi sai */
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        20%, 60% {
+            transform: translateX(-6px);
+        }
+
+        40%, 80% {
+            transform: translateX(6px);
+        }
+    }
+
+    .animate-shake {
+        animation: shake 0.4s;
+    }
+
+    /* Hiệu ứng pulse khi đúng */
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .animate-pulse {
+        animation: pulse 0.4s ease-in-out;
+    }
+</style>
+
+@code {
+    private List<WordDto> _words = [];
+    private int _currentIndex = 0;
+    private WordDto _currentWord = null!;
+    private bool _isLoading = true;
+    private string _answer = string.Empty;
+    private bool _isCorrect = false;
+    private bool _isChecked = false;
+    private bool IsComplete => _currentIndex >= _words.Count;
+    private double ProgressPercent => Math.Round(_words.Count == 0 ? 0 : ((double)_currentIndex / _words.Count) * 100, 0);
+
+    [Parameter]
+    public EventCallback<PracticeStep> OnCompleted { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(300);
+        _words = WordListState.Data;
+        if (_words.Any())
+            _currentWord = _words[0];
+        _isLoading = false;
+    }
+
+    private async Task CheckCorrect()
+    {
+        if (IsComplete) return;
+
+        _isChecked = true;
+        string submitAnswer = _answer.Trim().ToLower();
+        string correctAnswer = _currentWord.Text.Trim().ToLower();
+        _isCorrect = submitAnswer == correctAnswer;
+
+        StateHasChanged();
+        await Task.Delay(600); // chờ animation
+
+        if (_isCorrect)
+        {
+            _isChecked = false;
+            _answer = string.Empty;
+            _currentIndex++;
+
+            await SpeechHelper.SpeakAsync(correctAnswer, "en-US", 1);
+            await Task.Delay(1000); // chờ animation
+
+            if (!IsComplete)
+                _currentWord = _words[_currentIndex];
+            else
+            {
+                await Completed();
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private void ShowCorrectAnswer()
+    {
+        _answer = _currentWord.Text;
+    }
+
+    private string InputClass =>
+        _isChecked
+            ? _isCorrect ? "quiz-input-correct animate-pulse" : "quiz-input-wrong animate-shake"
+            : "";
+
+    private async Task Completed()
+    {
+        await OnCompleted.InvokeAsync(PracticeStep.CardMatch);
+    }
+}
+

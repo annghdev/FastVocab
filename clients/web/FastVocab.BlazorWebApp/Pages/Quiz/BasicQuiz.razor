@@ -1,0 +1,90 @@
+﻿@using FastVocab.Shared.DTOs.Words
+@using static FastVocab.BlazorWebApp.Pages.Practices.PracticePage
+@inject WordListState WordListState
+
+
+@if (_isLoading)
+{
+    <Spin Size="SpinSize.Large" />
+}
+else
+{
+    <Card Title="@($"Câu {_currentIndext + 1}: {_currentQuestion.Text}")">
+        @foreach (var option in _currentQuestion.Options)
+        {
+            <div @onclick="() => OnSelectOption(option)" class="w-100">
+                <CardGrid Hoverable="true" Class="@option.Color" Style="width:100%">
+                    @option.Text
+                </CardGrid>
+            </div>
+        }
+    </Card>
+}
+
+
+<style>
+    .option-correct {
+        background: #13c2c2;
+    }
+
+    .option-wrong {
+        background: #fa541c;
+    }
+
+    .option-unselect {
+        background: #ffffff;
+    }
+</style>
+
+@code {
+    private List<QuizQuestion> _questions = [];
+    private QuizQuestion _currentQuestion = null!;
+    private int _currentIndext = 0;
+    private List<WordDto> _words { get; set; } = [];
+    private bool _isLoading = true;
+
+    [Parameter]
+    public bool AskForMeaning { get; set; }
+
+    [Parameter]
+    public EventCallback<PracticeStep> OnCompleted { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(300);
+        _words = WordListState.Data;
+        _questions = QuizQuestionGenerator.GenerateFromWordList(_words, AskForMeaning);
+        _currentQuestion = _questions[0] ?? new();
+        _isLoading = false;
+    }
+
+    private async Task OnSelectOption(QuizQuestionOption option)
+    {
+        option.Select();
+        if (option.IsCorrect)
+        {
+            await SetNextQuestion();
+        }
+    }
+
+    private async Task SetNextQuestion()
+    {
+        await Task.Delay(300);
+        if (_currentIndext == _questions.Count - 1)
+        {
+            await Task.Delay(300);
+            await Completed();
+        }
+        else
+        {
+            _currentIndext++;
+            _currentQuestion = _questions[_currentIndext];
+        }
+        StateHasChanged();
+    }
+
+    private async Task Completed()
+    {
+        await OnCompleted.InvokeAsync(AskForMeaning ? PracticeStep.QuizAskFromMeaning : PracticeStep.Dictation);
+    }
+}

@@ -222,7 +222,7 @@ public class WordsController : ControllerBase
         return BadRequest(new { message = result.Errors?.FirstOrDefault()?.Title, errors = result.Errors });
     }
 
-    [HttpPost("excel")]
+    [HttpPost("import")]
     public async Task<IActionResult> UploadExcel(IFormFile file)
     {
         if (file == null || file.Length == 0)
