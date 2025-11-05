@@ -1,33 +1,350 @@
 ﻿@page "/words"
+@using FastVocab.Shared.DTOs.Topics
 @using FastVocab.Shared.DTOs.Words
-@inject WordService Words;
+@inject WordService WordService
+@inject TopicService TopicService
+@inject NavigationManager Navigation
+@inject WordListState WordListState
+@inject IMessageService MessageService
 
-@if (_isLoading)
+@if (_firstLoad)
 {
-    <p>Loading...</p>
+    <Skeleton Active="true" ParagraphRows="15"></Skeleton>
 }
 else
 {
-    <ul>
-        @foreach (var word in _words)
-        {
-            <li>@word.Text: @word.Meaning</li>
+    <div class="flex justify-between mb-4">
+        <Button Type="ButtonType.Primary" OnClick="ShowCreateModal">Thêm từ mới</Button>
+        <Button OnClick="GetPractice">Tải lại</Button>
+    </div>
+
+    <div class="practice-topic-container mb-4">
+
+        <div class="practice-button-wrapper">
+            <Button Type="ButtonType.Primary"
+                    Size="ButtonSize.Large"
+                    Icon="@IconType.Outline.PlayCircle"
+                    OnClick="GetPractice"
+                    style="height: 60px;">
+                Luyện tập
+            </Button>
+        </div>
+
+        <div class="topic-scroll-wrapper">
+            <div class="topic-scroll">
+                @foreach (var topic in _topics)
+                {
+                    <div class="topic-chip @(IsTopicSelected(topic) ? "selected" : "")"
+                         @onclick="() => OnTopicClicked(topic)">
+                        <Card Hoverable="true" Bordered="true" style="width:150px; text-align:center;">
+                            <div>@topic.Name</div>
+                        </Card>
+                    </div>
+                }
+                <div class="topic-chip manage-topic" @onclick="GoToTopics">
+                    <Card Hoverable="true" Bordered="true" style="width:150px; text-align:center;">
+                        <div>
+                            Quản lý chủ đề
+                        </div>
+                    </Card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <Table DataSource="_words" PageSize="25" ScrollX="1500" ScrollY="600" Loading=_isLoading>
+        <PropertyColumn Property="c => _words.IndexOf(c) + 1" Width="50" Title="#" Fixed="ColumnFixPlacement.Left" />
+        <PropertyColumn Property="c => c.Text" Title="Từ" Fixed="ColumnFixPlacement.Left" />
+        <PropertyColumn Property="c => c.Type" Title="Loại" />
+        <PropertyColumn Property="c => c.Meaning" Title="Nghĩa" />
+        <PropertyColumn Property="c => c.Level" Title="Bậc" />
+        <PropertyColumn Property="c => c.Definition" Title="Định nghĩa" />
+        <PropertyColumn Property="c => c.Example1" Title="Ví dụ" />
+
+        <ActionColumn Title="Action" Width="100" Fixed="ColumnFixPlacement.Right">
+            <Button>Chi tiết</Button>
+        </ActionColumn>
+    </Table>
+
+    <!-- 🧩 Modal thêm từ -->
+    <Modal Title="Thêm từ mới"
+           Visible="@_isAddModalVisible"
+           OnOk="HandleCreateWord"
+           OnCancel="HandleCancel"
+           OkText=@("Thêm")
+           CancelText=@("Đóng")>
+
+        <!-- Form nhập thủ công -->
+        <Form Model="_newWord" LabelColSpan="5" WrapperColSpan="19">
+            <FormItem Label="Từ">
+                <Input @bind-Value="_newWord.Text" />
+            </FormItem>
+            <FormItem Label="Nghĩa">
+                <Input @bind-Value="_newWord.Meaning" />
+            </FormItem>
+            <FormItem Label="Loại">
+                <Input @bind-Value="_newWord.Type" />
+            </FormItem>
+            <FormItem Label="Cấp">
+                <Input @bind-Value="_newWord.Level" />
+            </FormItem>
+            <FormItem Label="Định nghĩa">
+                <Input @bind-Value="_newWord.Definition" />
+            </FormItem>
+            <FormItem Label="Ví dụ">
+                <Input @bind-Value="_newWord.Example1" />
+            </FormItem>
+        </Form>
+
+        <Divider />
+
+        <div class="p-3 text-center">
+            <p>Hoặc tải lên danh sách từ qua file Excel:</p>
+
+            <InputFile id="fileInput" OnChange="OnUploadExcel" hidden multiple />
+
+            <Upload FileList="fileList">
+                <label class="ant-btn" for="fileInput">
+                    <Icon Type="@IconType.Outline.Upload" />
+                    Click to Upload
+                </label>
+            </Upload>
+        </div>
+    </Modal>
+
+    <style>
+        .flex {
+            display: flex;
         }
-    </ul>
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .p-3 {
+            padding: 1rem;
+        }
+        /* Class mới để đẩy nút "Thêm từ mới" sang phải */
+        .justify-end {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        /* === CÁC CLASS MỚI CHO LAYOUT === */
+
+        /* Container cha cho nút và thanh topics */
+        .practice-topic-container {
+            display: flex;
+            align-items: center; /* Căn giữa nút và thanh cuộn theo chiều dọc */
+            gap: 16px; /* Khoảng cách giữa nút và thanh cuộn */
+        }
+
+        /* Wrapper cho nút Luyện tập */
+        .practice-button-wrapper {
+            flex-shrink: 0; /* Không cho phép nút bị co lại */
+        }
+
+        /* Wrapper cho thanh cuộn topics */
+        .topic-scroll-wrapper {
+            flex-grow: 1; /* Cho phép thanh cuộn chiếm hết không gian còn lại */
+            min-width: 0; /* Cần thiết để overflow-x hoạt động đúng trong flex */
+        }
+
+        .topic-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 12px 4px;
+            scroll-behavior: smooth;
+        }
+
+            .topic-scroll::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .topic-scroll::-webkit-scrollbar-thumb {
+                background-color: #d9d9d9;
+                border-radius: 3px;
+            }
+
+        .topic-chip {
+            flex: 0 0 auto;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .topic-chip:hover {
+                transform: translateY(-3px);
+            }
+
+            /* Khi được chọn */
+            .topic-chip.selected .ant-card {
+                border: 2px solid #1890ff !important;
+                box-shadow: 0 0 8px rgba(24, 144, 255, 0.3);
+                background-color: #e6f7ff;
+            }
+
+            /* Nút quản lý chủ đề (khác màu một chút) */
+            .topic-chip.manage-topic .ant-card {
+                background-color: #fafafa;
+                border: 1px dashed #d9d9d9;
+                transition: all 0.3s ease;
+            }
+
+            .topic-chip.manage-topic:hover .ant-card {
+                border-color: #1890ff;
+                background-color: #e6f7ff;
+            }
+
+    </style>
 }
 
 @code {
+    #region Fields&Props
+
     private List<WordDto> _words = [];
-    bool _isLoading = false;
+    private List<TopicDto> _topics = [];
+    private int? _selectedTopics;
+    bool _isLoading = true;
+    bool _firstLoad = true;
+    private IBrowserFile? _selectedFile;
+    private InputFile? fileInput;
+    private string? _selectedFileName;
+    List<UploadFileItem> fileList = new List<UploadFileItem>();
+    // Modal state
+    private bool _isAddModalVisible = false;
+    private CreateWordRequest _newWord = new();
+
+    #endregion
+
+    #region Life cycles
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        _isLoading = true;
+        await Task.Delay(300);
+        _topics = await TopicService.GetAllAsync();
+        _words = await WordService.GetAllAsync();
+        _isLoading = false;
+        _firstLoad = false;
     }
-    private async Task LoadData()
+    #endregion
+
+    #region Load Data
+    private async Task LoadWords()
     {
         _isLoading = true;
-        await Task.Delay(100);
-        _words = await Words.GetAllAsync();
+        await Task.Delay(300);
+        if (_selectedTopics.HasValue)
+        {
+            _words = await WordService.GetByTopic(_selectedTopics.Value);
+        }
+        else
+        {
+            _words = await WordService.GetAllAsync();
+        }
         _isLoading = false;
     }
+    #endregion
+
+    #region Modal Actions
+    private void ShowCreateModal()
+    {
+        _isAddModalVisible = true;
+        _newWord = new CreateWordRequest();
+    }
+
+    private void HandleCancel()
+    {
+        _isAddModalVisible = false;
+    }
+
+    private async Task HandleCreateWord()
+    {
+        _newWord.TopicIds = _selectedTopics.HasValue ? [_selectedTopics.Value] : null;
+        var result = await WordService.CreateAsync(_newWord);
+        if (result != null)
+        {
+            MessageService.Success("Đã thêm từ mới");
+            _isAddModalVisible = false;
+            _words.Insert(0, result);
+        }
+        else
+        {
+            MessageService.Error("Không thể thêm từ");
+        }
+    }
+    #endregion
+
+    #region Triggers
+    private async Task OnSelectedTopicChangedHandler(TopicDto topic)
+    {
+        await LoadWords();
+    }
+
+    private async Task OnUploadExcel(InputFileChangeEventArgs e)
+    {
+        _selectedFile = e.File;
+        var result = await WordService.ImportFromExcel(_selectedFile);
+        if (result == null)
+        {
+            MessageService.Error("Upload file thất bại");
+        }
+        else if (result.IsSuccess)
+        {
+            MessageService.Success("Upload file thành công");
+            _isAddModalVisible = false;
+            _topics = await TopicService.GetAllAsync();
+            await LoadWords();
+        }
+    }
+
+    private async Task OnTopicClicked(TopicDto topic)
+    {
+        if (_selectedTopics == topic.Id)
+        {
+            // Nếu click lại cùng topic -> bỏ chọn
+            _selectedTopics = null;
+        }
+        else
+        {
+            _selectedTopics = topic.Id;
+        }
+
+        await LoadWords();
+    }
+    #endregion
+
+    #region Navigations
+    private void GetPractice()
+    {
+        WordListState.Data = _words;
+        Navigation.NavigateTo("/practices");
+    }
+    private void GoToTopics()
+    {
+        // Chuyển trang
+        // Navigation.NavigateTo("/topics");
+        // Hoặc hiện Modal
+    }
+    #endregion
+
+    #region Helpers
+    private bool IsTopicSelected(TopicDto topic) => _selectedTopics == topic.Id;
+
+    #endregion
 }

@@ -1,6 +1,7 @@
-using FastVocab.Application.Features.Words.Commands.AddWordToTopic;
+﻿using FastVocab.Application.Features.Words.Commands.AddWordToTopic;
 using FastVocab.Application.Features.Words.Commands.CreateWord;
 using FastVocab.Application.Features.Words.Commands.DeleteWord;
+using FastVocab.Application.Features.Words.Commands.ImportFromExcel;
 using FastVocab.Application.Features.Words.Commands.RemoveWordFromTopic;
 using FastVocab.Application.Features.Words.Commands.UpdateWord;
 using FastVocab.Application.Features.Words.Queries.GetAllWords;
@@ -8,7 +9,6 @@ using FastVocab.Application.Features.Words.Queries.GetWordById;
 using FastVocab.Application.Features.Words.Queries.GetWordsByLevel;
 using FastVocab.Application.Features.Words.Queries.GetWordsByTopic;
 using FastVocab.Shared.DTOs.Words;
-using FastVocab.Shared.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -220,6 +220,17 @@ public class WordsController : ControllerBase
         }
 
         return BadRequest(new { message = result.Errors?.FirstOrDefault()?.Title, errors = result.Errors });
+    }
+
+    [HttpPost("import")]
+    public async Task<IActionResult> UploadExcel(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("File is empty.");
+
+        var result = await _mediator.Send(new ImportWordsFromExcelCommand(file));
+
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }
 

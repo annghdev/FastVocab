@@ -2,35 +2,7 @@
 
 <Layout>
     <Header Class="header">
-        <div class="header-left">
-            @* <img class="logo" src="logo.png" /> *@
-            <Avatar Size="AvatarSize.Large" Src="logo.png" />
-            <h2 class="app-name">Admin Panel</h2>
-        </div>
-        <div class="header-right">
-            <Dropdown>
-                <ChildContent>
-                    <Button Type="@ButtonType.Link" Class="user-dropdown-btn">
-                        <Avatar Size="AvatarSize.Small" Icon="@IconType.Outline.User" />
-                        <span class="username">John Doe</span>
-                        <Icon Type="@IconType.Outline.Down" />
-                    </Button>
-                </ChildContent>
-                <Overlay>
-                    <Menu>
-                        <MenuItem Key="profile" RouterLink="/account">
-                            <Icon Type="@IconType.Outline.User" />
-                            <span>Quản lý tài khoản</span>
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem Key="logout" OnClick="() => { }">
-                            <Icon Type="@IconType.Outline.Logout" />
-                            <span>Đăng xuất</span>
-                        </MenuItem>
-                    </Menu>
-                </Overlay>
-            </Dropdown>
-        </div>
+        
     </Header>
     <Layout>
         <Sider Collapsible Theme="SiderTheme.Light" Width="250">
@@ -40,21 +12,21 @@
                     <span>Dashboard</span>
                 </MenuItem>
                 <MenuItem Key="2" RouterLink="/words">
-                    <Icon Type="@IconType.Outline.ShoppingCart" />
-                    <span>Words</span>
+                    <Icon Type="@IconType.Outline.Appstore" />
+                    <span>Từ vựng</span>
                 </MenuItem>
-                <MenuItem Key="3" RouterLink="/collections">
-                    <Icon Type="@IconType.Outline.ShoppingCart" />
-                    <span>Collections</span>
+                <MenuItem Key="3" RouterLink="/speech">
+                    <Icon Type="@IconType.Outline.Sound" />
+                    <span>Speech Test</span>
                 </MenuItem>
                 <MenuItem Key="4" RouterLink="/practices">
-                    <Icon Type="@IconType.Outline.ShoppingCart" />
-                    <span>Practices</span>
+                    <Icon Type="@IconType.Outline.Bulb" />
+                    <span>Luyện tập</span>
                 </MenuItem>
             </Menu>
         </Sider>
         <Layout>
-            <Content Class="site-layout-background" Style="padding: 16px; margin: 0; min-height: 100vh;">
+            <Content Style="padding: 16px; margin: 0; min-height: 100vh;background:#F9F8F8">
                 @Body
             </Content>
         </Layout>

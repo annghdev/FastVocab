@@ -1,0 +1,101 @@
+﻿@inject SpeechToTextHepler RecoHelper 
+@implements IDisposable // Dùng IDisposable để hủy đăng ký event
+
+<div style="font-family: Arial, sans-serif; max-width: 600px;">
+    
+    <Title Level="4">🎙️ Chuyển Giọng Nói Thành Văn Bản</Title>
+
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+        <SimpleSelect @bind-Value="SelectedLanguage">
+            <SelectOptions>
+                <SimpleSelectOption Value="@("en-US")" Label="Tiếng Anh (US)"></SimpleSelectOption>
+                <SimpleSelectOption Value="@("vi-VN")" Label="Tiếng Việt"></SimpleSelectOption>
+                <SimpleSelectOption Value="@("en-GB")" Label="Tiếng Anh (UK)"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+    
+        @if (IsListening)
+        {
+            <Button Type="ButtonType.Primary" OnClick="StopListening" Loading="IsListening">
+                Đang nghe... (Nhấn để dừng)
+            </Button>
+        }
+        else
+        {
+            <Button Type="ButtonType.Primary" Icon="audio" OnClick="StartListening">
+                Bắt đầu Ghi Âm
+            </Button>
+        }
+    </div>
+
+    <Input @bind-Value="RecognizedText" />
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <Alert Message="Lỗi" Description="@ErrorMessage" Type="AlertType.Error" />
+    }
+</div>
+
+@code {
+    [Parameter] public string SelectedLanguage { get; set; } = "en-US";
+    
+    private bool IsListening = false;
+    private string RecognizedText = string.Empty;
+    private string ErrorMessage = string.Empty;
+
+    // Không cần DotNetObjectReference ở đây nữa
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 1. Đăng ký nhận các event từ service
+        RecoHelper.OnResultReceived += HandleResult;
+        RecoHelper.OnStateChanged += HandleStateChange;
+        RecoHelper.OnError += HandleError;
+
+        // 2. Khởi tạo service
+        await RecoHelper.InitializeAsync();
+    }
+
+    // 3. Các hàm gọi service
+    private async Task StartListening()
+    {
+        ErrorMessage = string.Empty;
+        RecognizedText = string.Empty;
+        await RecoHelper.StartAsync(SelectedLanguage);
+    }
+
+    private async Task StopListening()
+    {
+        await RecoHelper.StopAsync();
+    }
+
+    // ===============================================
+    // CÁC HÀM XỬ LÝ EVENT TỪ SERVICE
+    // ===============================================
+
+    private void HandleResult(string text)
+    {
+        RecognizedText = text;
+        StateHasChanged(); // Cập nhật UI
+    }
+
+    private void HandleStateChange(bool isListening)
+    {
+        IsListening = isListening;
+        StateHasChanged(); // Cập nhật UI
+    }
+
+    private void HandleError(string error)
+    {
+        ErrorMessage = error;
+        StateHasChanged(); // Cập nhật UI
+    }
+
+    // Bắt buộc phải hủy đăng ký (unsubscribe) để tránh memory leak
+    public void Dispose()
+    {
+        RecoHelper.OnResultReceived -= HandleResult;
+        RecoHelper.OnStateChanged -= HandleStateChange;
+        RecoHelper.OnError -= HandleError;
+    }
+}

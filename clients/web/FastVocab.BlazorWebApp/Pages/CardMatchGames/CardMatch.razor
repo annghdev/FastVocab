@@ -1,0 +1,228 @@
+﻿@using FastVocab.Shared.DTOs.Words
+@using static FastVocab.BlazorWebApp.Pages.Practices.PracticePage
+@inject WordListState WordListState
+@inject TextToSpeechHepler SpeechHelper
+
+<div class="card-game-container">
+
+    @if (_cards is not null)
+    {
+        <div class="card-grid">
+            @foreach (var card in _cards)
+            {
+                <div class="game-card @card.Status @(card.IsHidden ? "hidden-card" : "")"
+                     @onclick="() => OnSelectCard(card)">
+                    <div class="inner">
+                        <div class="front">@card.DisplayText</div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .card-game-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+        width: 600px;
+        max-width: 90vw;
+    }
+
+    .game-card {
+        background: #ffffff;
+        border-radius: 2px;
+        border: 1px solid #d9d9d9;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+    }
+
+        .game-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .game-card.selected {
+            border: 2px solid #1890ff;
+            background: #e6f7ff;
+        }
+
+        .game-card.correct {
+            background: #52c41a;
+            color: white;
+            animation: pulse 0.4s ease-in-out;
+        }
+
+        .game-card.wrong {
+            background: #ff4d4f;
+            color: white;
+            animation: shake 0.4s;
+        }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        50% {
+            transform: translateX(5px);
+        }
+
+        75% {
+            transform: translateX(-5px);
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .game-finish {
+        text-align: center;
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    /* Khi thẻ đã được khớp đúng */
+    .hidden-card {
+        background: transparent !important;
+        border: 1px dashed #d9d9d9 !important;
+        color: transparent !important;
+        box-shadow: none !important;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+        /* Tùy chọn: thêm hiệu ứng mờ dần khi biến mất */
+        .hidden-card .front {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+</style>
+
+@code {
+    private List<WordDto> _words { get; set; } = new();
+    [Parameter] public EventCallback<PracticeStep> OnGameFinished { get; set; }
+
+    private List<CardItem> _cards = new();
+    private CardItem? _firstCard;
+    private int _batchIndex = 0;
+    private bool _isFinished = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(300);
+        _words = WordListState.Data;
+        await LoadNextBatch();
+    }
+
+    private async Task OnSelectCard(CardItem card)
+    {
+        if (card.IsHidden || card == _firstCard) return;
+
+        card.Status = "selected";
+        StateHasChanged();
+
+        if (_firstCard == null)
+        {
+            _firstCard = card;
+            return;
+        }
+
+        // Thẻ thứ hai
+        if (_firstCard.PairId == card.PairId && _firstCard.Type != card.Type)
+        {
+            // Đúng
+            _firstCard.Status = "correct";
+            card.Status = "correct";
+            StateHasChanged();
+            await Task.Delay(400);
+            _firstCard.IsHidden = true;
+            card.IsHidden = true;
+
+            string speechText = _firstCard.Type == CardType.Word ? _firstCard.DisplayText : card.DisplayText;
+            await SpeechHelper.SpeakAsync(speechText, "en-US", 1);
+        }
+        else
+        {
+            // Sai
+            _firstCard.Status = "wrong";
+            card.Status = "wrong";
+            StateHasChanged();
+            await Task.Delay(600);
+            _firstCard.Status = "";
+            card.Status = "";
+        }
+
+        _firstCard = null;
+        StateHasChanged();
+
+        // Kiểm tra hết bài
+        if (_cards.All(c => c.IsHidden))
+        {
+            await Task.Delay(800);
+            LoadNextBatch();
+        }
+    }
+
+    private async Task LoadNextBatch()
+    {
+        var batches = CardMatchGenerator.GenerateBatches(_words, 16); // 8 thẻ mỗi batch (4 từ)
+        if (_batchIndex < batches.Count)
+        {
+            _cards = batches[_batchIndex];
+            _batchIndex++;
+        }
+        else
+        {
+            _isFinished = true;
+            await OnGameFinished.InvokeAsync(PracticeStep.Done);
+        }
+        _firstCard = null;
+        StateHasChanged();
+    }
+
+    private void Restart()
+    {
+        _batchIndex = 0;
+        _isFinished = false;
+        LoadNextBatch();
+    }
+}
