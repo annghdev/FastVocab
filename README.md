@@ -125,12 +125,13 @@ Dự án được xây dựng dựa trên:
 
 5.  **Truy cập ứng dụng:**
     Mở trình duyệt và truy cập vào địa chỉ mà Blazor Server đang chạy (`https://localhost:7226`).
+    Temple file excel nhập từ vựng nằm trong folder **`/documents`**
 
 ---
 
 ## 📄 Giấy phép
 
-Dự án này được cấp phép theo **Giấy phép MIT**. Xem chi tiết tại file [LICENSE](LICENSE) (Bạn nên tạo một file tên `LICENSE` và dán nội dung giấy phép MIT vào đó).
+Dự án này được cấp phép theo **Giấy phép MIT**. Xem chi tiết tại file [LICENSE](LICENSE)
 
 Bản quyền (c) 2025 annghdev
 
