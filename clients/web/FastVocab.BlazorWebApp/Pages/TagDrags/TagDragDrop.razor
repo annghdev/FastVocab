@@ -1,0 +1,164 @@
+﻿@page "/tag-dragdrop"
+@using System.Collections.ObjectModel
+
+<h3 class="mb-3 text-center font-bold text-xl">Kéo thả thẻ vào đúng container</h3>
+
+<div class="flex justify-center gap-8">
+    <div class="container">
+        <div class="row">
+            <div class="col-4"
+                 ondragover="event.preventDefault();"
+                 @ondrop="@(e => OnDrop(e, "OutSide"))">
+                <h4 class="font-semibold mb-3">Out Side</h4>
+                @foreach (var tag in OutSideContainer)
+                {
+                    <div class="@GetTagClass(tag)"
+                         draggable="true"
+                         @ondragstart="e => OnDragStart(e, tag)"
+                         style="margin:6px; padding:6px 12px; border-radius:8px; cursor:grab;">
+                        @tag.Name
+                    </div>
+                }
+            </div>
+
+            <div class="col-4"
+                 ondragover="event.preventDefault();"
+                 @ondrop="@(e => OnDrop(e, "Left"))">
+                <h4 class="font-semibold mb-3">Trước mệnh đề</h4>
+                @foreach (var tag in LeftContainer)
+                {
+                    <div class="@GetTagClass(tag)"
+                         draggable="true"
+                         @ondragstart="e => OnDragStart(e, tag)"
+                         style="margin:6px; padding:6px 12px; border-radius:8px; cursor:grab;">
+                        @tag.Name
+                    </div>
+                }
+            </div>
+
+            <div class="col-4"
+                 ondragover="event.preventDefault();"
+                 @ondrop="@(e => OnDrop(e, "Right"))">
+                <h4 class="font-semibold mb-3">Trước cụm danh từ / Ving</h4>
+                @foreach (var tag in RightContainer)
+                {
+                    <div class="@GetTagClass(tag)"
+                         draggable="true"
+                         @ondragstart="e => OnDragStart(e, tag)"
+                         style="margin:6px; padding:6px 12px; border-radius:8px; cursor:grab;">
+                        @tag.Name
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="mt-6 flex justify-center gap-4">
+    <button class="btn btn-success"
+            @onclick="CheckAnswers">
+        Kiểm tra kết quả
+    </button>
+    <button class="btn btn-danger"
+            @onclick="Reset">
+        Làm lại
+    </button>
+</div>
+
+@code {
+    class TagItem
+    {
+        public string Name { get; set; } = "";
+        public string CorrectContainer { get; set; } = "";
+        public string CurrentContainer { get; set; } = "";
+        public bool? IsCorrect { get; set; }
+    }
+
+    List<TagItem> AllTags = new()
+    {
+        new TagItem { Name = "Althought", CorrectContainer = "Left" },
+        new TagItem { Name = "Though", CorrectContainer = "Right" },
+        new TagItem { Name = "Despite", CorrectContainer = "Right" },
+        new TagItem { Name = "In spite of", CorrectContainer = "Right" },
+    };
+
+    ObservableCollection<TagItem> OutSideContainer = new();
+    ObservableCollection<TagItem> LeftContainer = new();
+    ObservableCollection<TagItem> RightContainer = new();
+
+    TagItem? draggedItem;
+
+    protected override void OnInitialized()
+    {
+        Reset();
+    }
+
+    void OnDragStart(DragEventArgs e, TagItem tag)
+    {
+        draggedItem = tag;
+    }
+
+    void OnDrop(DragEventArgs e, string target)
+    {
+        if (draggedItem == null) return;
+
+        // Xóa khỏi container cũ
+        if (OutSideContainer.Contains(draggedItem))
+            OutSideContainer.Remove(draggedItem);
+
+        if (LeftContainer.Contains(draggedItem))
+            LeftContainer.Remove(draggedItem);
+
+        if (RightContainer.Contains(draggedItem))
+            RightContainer.Remove(draggedItem);
+
+        // Thêm vào container mới
+        draggedItem.CurrentContainer = target;
+
+        if (target == "Left")
+            LeftContainer.Add(draggedItem);
+        else if (target == "Right")
+            RightContainer.Add(draggedItem);
+        else
+            OutSideContainer.Add(draggedItem);
+
+        draggedItem = null;
+    }
+
+    void CheckAnswers()
+    {
+        foreach (var tag in AllTags)
+        {
+            tag.IsCorrect = tag.CurrentContainer == tag.CorrectContainer;
+        }
+    }
+
+    void Reset()
+    {
+        draggedItem = null;
+        LeftContainer.Clear();
+        RightContainer.Clear();
+        OutSideContainer.Clear();
+        foreach (var tag in AllTags)
+        {
+            tag.CurrentContainer = "OutSide";
+            tag.IsCorrect = null;
+        }
+
+        foreach (var tag in AllTags.Where(t => t.CurrentContainer == "OutSide"))
+            OutSideContainer.Add(tag);
+    }
+
+    string GetTagClass(TagItem tag)
+    {
+        string baseClass = "";
+
+        if (tag.IsCorrect == true)
+            return $"{baseClass} bg-success";
+        else if (tag.IsCorrect == false)
+            return $"{baseClass} bg-danger";
+        else
+            return $"{baseClass} bg-info";
+    }
+}

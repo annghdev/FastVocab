@@ -19,5 +19,6 @@ public static class RegistrationExtensions
         services.AddScoped<WordListState>();
         services.AddTransient<TextToSpeechHepler>();
         services.AddTransient<SpeechToTextHepler>();
+        services.AddSingleton<GeminiService>();
     }
 }

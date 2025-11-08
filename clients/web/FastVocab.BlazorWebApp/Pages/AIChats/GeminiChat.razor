@@ -1,0 +1,341 @@
+﻿@page "/chat"
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@inject GeminiService GeminiSvc
+@inject IJSRuntime JSRuntime
+@using Markdig
+
+<PageTitle>Chat with Gemini</PageTitle>
+
+<div class="chat-container">
+    <div id="messageList" class="message-list">
+        @foreach (var msg in messages)
+        {
+            <div class="chat-message @(msg.IsUser ? "user" : "gemini")">
+                @if (msg.IsUser)
+                {
+                    <p>@msg.Text</p>
+                }
+                else
+                {
+                    @((MarkupString)msg.RenderedText)
+                }
+            </div>
+        }
+
+        @if (isLoading)
+        {
+            <div class="loading-message">
+                Gemini đang gõ
+                <span class="loading-dots">
+                    <span></span><span></span><span></span>
+                </span>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="error-message">
+                <strong>Lỗi:</strong> @errorMessage
+            </div>
+        }
+    </div>
+
+    <div class="chat-input-area">
+        <input @bind="currentMessage"
+               @onkeydown="HandleKeyDown"
+               placeholder="Hỏi Gemini điều gì đó..."
+               class="chat-input"
+               disabled="@isLoading"
+               autocomplete="off" />
+
+        <button @onclick="SendMessage"
+                disabled="@(string.IsNullOrWhiteSpace(currentMessage) || isLoading)"
+                class="send-button">
+            Gửi
+        </button>
+    </div>
+</div>
+
+@code {
+    private string? currentMessage;
+    private bool isLoading = false;
+    private string? errorMessage;
+    private List<ChatMessage> messages = new List<ChatMessage>();
+
+    // Sử dụng Markdig để render Markdown
+    protected override async Task OnInitializedAsync()
+    {
+        // Có thể load tin nhắn cũ tại đây nếu có
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Tự động cuộn xuống cuối khi có tin nhắn mới hoặc khi render lần đầu
+        await JSRuntime.InvokeVoidAsync("chatInterop.scrollToBottom", "messageList");
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !isLoading)
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(currentMessage) || isLoading)
+        {
+            return;
+        }
+
+        errorMessage = null; // Xóa thông báo lỗi cũ
+
+        var userMessage = new ChatMessage { Text = currentMessage, IsUser = true };
+        messages.Add(userMessage);
+        var prompt = currentMessage;
+        currentMessage = "";
+        isLoading = true;
+        StateHasChanged(); // Cập nhật UI để hiển thị tin nhắn người dùng và loading
+
+        try
+        {
+            var responseText = await GeminiSvc.GenerateResponseAsync(prompt);
+            messages.Add(new ChatMessage { Text = responseText, IsUser = false });
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Không thể lấy phản hồi từ Gemini: {ex.Message}";
+            // Hoặc có thể thêm tin nhắn lỗi vào danh sách messages
+            // messages.Add(new ChatMessage { Text = errorMessage, IsUser = false, IsError = true });
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged(); // Cập nhật UI sau khi có phản hồi hoặc lỗi
+        }
+    }
+
+    // Class để lưu trữ tin nhắn
+    private class ChatMessage
+    {
+        public string Text { get; set; } = "";
+        public bool IsUser { get; set; }
+        public bool IsError { get; set; } = false;
+
+        // Thuộc tính để render Markdown
+        public string RenderedText => IsUser ? Text : Markdown.ToHtml(Text);
+    }
+}
+
+<style>
+    /* wwwroot/css/chat.css */
+
+    /* Tổng thể container chat (PHIÊN BẢN LẤP ĐẦY THẺ CHA) */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        /* Thay đổi quan trọng: */
+        width: 100%; /* Lấp đầy 100% chiều rộng của thẻ cha */
+        height: 100%; /* Lấp đầy 100% chiều cao của thẻ cha */
+        /* Bỏ các thuộc tính cũ: */
+        /* height: calc(100vh - 180px); */
+        /* max-width: 800px; */
+        /* margin: 20px auto; */
+        /* Giữ lại các style đẹp: */
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        background-color: #fff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    /* Khu vực hiển thị tin nhắn */
+    .message-list {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Khoảng cách giữa các tin nhắn */
+    }
+
+    /* Styling cho từng tin nhắn */
+    .chat-message {
+        padding: 10px 15px;
+        border-radius: 8px;
+        max-width: 80%; /* Giới hạn chiều rộng tin nhắn */
+        word-wrap: break-word; /* Ngắt chữ dài */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.3s ease-out; /* Animation khi tin nhắn xuất hiện */
+    }
+
+        .chat-message.user {
+            background-color: #007bff; /* Màu xanh dương cho tin nhắn người dùng */
+            color: white;
+            align-self: flex-end; /* Căn phải */
+            border-bottom-right-radius: 2px; /* Góc nhọn bên dưới phải */
+        }
+
+        .chat-message.gemini {
+            background-color: #ffffff; /* Đổi thành nền trắng */
+            border: 1px solid #e0e0e0; /* Thêm viền nhẹ */
+            color: #333;
+            align-self: flex-start; /* Vẫn căn trái */
+            max-width: 90%; /* Tăng chiều rộng tối đa lên một chút */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); /* Giảm bóng mờ */
+            animation: fadeIn 0.3s ease-out;
+            border-bottom-left-radius: 2px;
+        }
+
+            /* Markdown styling (tạm thời, có thể dùng thư viện sau) */
+            .chat-message.gemini p {
+                margin-bottom: 0.5em;
+            }
+
+                .chat-message.gemini p:last-child {
+                    margin-bottom: 0; /* Đoạn cuối cùng không cần lề */
+                }
+
+            .chat-message.gemini pre {
+                background-color: #282c34; /* Nền tối (dark mode) cho code */
+                color: #abb2bf; /* Màu chữ sáng cho code */
+                padding: 12px;
+                border-radius: 6px;
+                overflow-x: auto; /* Cho phép cuộn code block nếu quá dài */
+                font-family: 'Consolas', 'Courier New', monospace;
+                font-size: 0.9em;
+            }
+
+            .chat-message.gemini code {
+                background-color: #f0f0f0; /* Nền xám rất nhạt */
+                color: #c7254e; /* Màu hồng/đỏ đặc trưng */
+                padding: 2px 5px;
+                border-radius: 4px;
+                font-size: 0.9em;
+            }
+    /* Hiệu ứng gõ (loading) */
+    .loading-message {
+        align-self: flex-start;
+        padding: 10px 15px;
+        background-color: #e0f7fa; /* Màu xanh nhạt */
+        color: #007bff;
+        border-radius: 8px;
+        border-bottom-left-radius: 2px;
+        max-width: 50%;
+        font-style: italic;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .loading-dots span {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        margin: 0 1px;
+        background-color: #007bff;
+        border-radius: 50%;
+        animation: blink 1.4s infinite ease-in-out both;
+    }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0s;
+        }
+
+    /* Khu vực nhập liệu */
+    .chat-input-area {
+        display: flex;
+        padding: 15px;
+        border-top: 1px solid #e0e0e0;
+        background-color: #f9f9f9;
+    }
+
+    .chat-input {
+        flex-grow: 1;
+        padding: 10px 15px;
+        border: 1px solid #ced4da;
+        border-radius: 25px; /* Bo tròn ô input */
+        font-size: 1em;
+        outline: none;
+        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .chat-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .send-button {
+        margin-left: 10px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 25px; /* Bo tròn nút gửi */
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    }
+
+        .send-button:hover:not(:disabled) {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .send-button:disabled {
+            background-color: #a0c6ed;
+            cursor: not-allowed;
+        }
+
+    /* Animations */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes blink {
+        0%, 80%, 100% {
+            opacity: 0;
+        }
+
+        40% {
+            opacity: 1;
+        }
+    }
+
+    /* Các tin nhắn lỗi */
+    .error-message {
+        background-color: #ffe0e0;
+        color: #d32f2f;
+        padding: 10px 15px;
+        border-radius: 8px;
+        align-self: flex-start;
+        margin-top: 5px;
+    }
+</style>
+
+<script>
+        // wwwroot/js/chatInterop.js
+    window.chatInterop = {
+        scrollToBottom: function (elementId) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.scrollTop = element.scrollHeight;
+            }
+        }
+    };
+</script>
