@@ -28,7 +28,7 @@ public static class RegistrationExtensions
         // DbContext
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
-                configuration.GetConnectionString("SqlServer"),
+                configuration.GetConnectionString("FastVocab"),
                 b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
         // Register repositories and other services
