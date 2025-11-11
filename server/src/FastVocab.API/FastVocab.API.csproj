@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\FastVocab.ServiceDefaults\FastVocab.ServiceDefaults.csproj" />
     <ProjectReference Include="..\FastVocab.Infrastructure\FastVocab.Infrastructure.csproj" />
   </ItemGroup>
 
