@@ -1,7 +1,7 @@
 ﻿@using FastVocab.Shared.DTOs.Words
 @using static FastVocab.BlazorWebApp.Pages.Practices.PracticePage
 @inject WordListState WordListState
-
+@inject TextToSpeechHepler SpeechHelper
 
 @if (_isLoading)
 {
@@ -63,6 +63,8 @@ else
         option.Select();
         if (option.IsCorrect)
         {
+            await SpeechHelper.SpeakAsync(option.Text, "en-US", 1);
+            await Task.Delay(300);
             await SetNextQuestion();
         }
     }
